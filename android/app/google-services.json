@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "507696917162",
+    "project_id": "movie-ticket-padc",
+    "storage_bucket": "movie-ticket-padc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507696917162:android:78cdf9b3cc0e34b21cbed3",
+        "android_client_info": {
+          "package_name": "com.radius.movie_ticket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507696917162-6ajf0c0g48nv2i3qker7loacoh4dtt8h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.radius.movie_ticket",
+            "certificate_hash": "4a98acac5ebae4750c47bcd939d059a1e9e71261"
+          }
+        },
+        {
+          "client_id": "507696917162-s0kvm5j45gijimvq4e26m2hqfgsl3u8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdKED8oaeLF2_N-PGmkkJZTPIyW0UrzH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507696917162-s0kvm5j45gijimvq4e26m2hqfgsl3u8s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
