@@ -33,7 +33,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
 
   /// register, login and logout
   @override
-  Future<AuthenticationResponse> registerWithEmail(
+  Future<AuthenticationResponse?>? registerWithEmail(
     String name,
     String email,
     String phone,
@@ -54,13 +54,13 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
       if (response.code == RESPONSE_CODE_SUCCESS) {
         return Future.value(response);
       } else {
-        return Future.error(response.message);
+        return Future.error(response.message!);
       }
     });
   }
 
   @override
-  Future<AuthenticationResponse> loginWithEmail(
+  Future<AuthenticationResponse?>? loginWithEmail(
     String email,
     String password,
   ) {
@@ -68,29 +68,29 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
       if (response.code == RESPONSE_CODE_SUCCESS) {
         return Future.value(response);
       } else {
-        return Future.error(response.message);
+        return Future.error(response.message!);
       }
     });
   }
 
   @override
-  Future<AuthenticationResponse> loginWithFacebook(String accessToken) {
+  Future<AuthenticationResponse?>? loginWithFacebook(String accessToken) {
     return _mApi.logInWithFacebook(accessToken);
   }
 
   @override
-  Future<AuthenticationResponse> loginWithGoogle(String accessToken) {
+  Future<AuthenticationResponse?>? loginWithGoogle(String accessToken) {
     return _mApi.logInWithGoogle(accessToken);
   }
 
   @override
-  Future<LogOutResponse> logout(String token) {
+  Future<LogOutResponse?>? logout(String token) {
     return _mApi.logout(token).asStream().map((event) => event).first;
   }
 
   /// get cinema list, movie list and detail
   @override
-  Future<List<MovieVO>> getMovieList(String status) {
+  Future<List<MovieVO>?>? getMovieList(String status) {
     return _mApi
         .getMovieList(status)
         .asStream()
@@ -99,12 +99,12 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<List<CinemaVO>> getCinemaList() {
+  Future<List<CinemaVO>?>? getCinemaList() {
     return _mApi.getCinemaList().asStream().map((event) => event.data).first;
   }
 
   @override
-  Future<MovieVO> getMovieDetailById(int movieId) {
+  Future<MovieVO?>? getMovieDetailById(int movieId) {
     return _mApi
         .getMovieDetailById(movieId)
         .asStream()
@@ -114,8 +114,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
 
   /// auth api
   @override
-  Future<UserVO> getUserProfile(String token
-      ) {
+  Future<UserVO?>? getUserProfile(String token) {
     return _mApi
         .getUserProfile(token)
         .asStream()
@@ -124,12 +123,12 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<List<SnackVO>> getSnacks(String token) {
+  Future<List<SnackVO>?>? getSnacks(String token) {
     return _mApi.getSnacks(token).asStream().map((event) => event.data).first;
   }
 
   @override
-  Future<List<List<MovieSeatVO>>> getSeatPlan(
+  Future<List<List<MovieSeatVO>>?>? getSeatPlan(
       String token, int id, String bookingDate) {
     return _mApi
         .getSeatPlan(token, id, bookingDate)
@@ -139,7 +138,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlots(
+  Future<List<CinemaDayTimeSlotVO>?>? getCinemaDayTimeSlots(
       String token, String date) {
     return _mApi
         .getCinemaDayTimeSlots(token, date)
@@ -149,7 +148,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<CreateCardResponse> createCard(String token, String cardNumber,
+  Future<CreateCardResponse?>? createCard(String token, String cardNumber,
       String cardHolder, String expirationDate, String cvc) {
     return _mApi
         .createCard(token, cardNumber, cardHolder, expirationDate, cvc)
@@ -159,7 +158,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<List<PaymentMethodVO>> getPaymentMethod(String token) {
+  Future<List<PaymentMethodVO>?>? getPaymentMethod(String token) {
     return _mApi
         .getPaymentMethod(token)
         .asStream()
@@ -168,7 +167,7 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<List<TransactionVO>> getProfileTransaction(String token) {
+  Future<List<TransactionVO>?>? getProfileTransaction(String token) {
     return _mApi
         .getProfileTransaction(token)
         .asStream()
@@ -177,14 +176,14 @@ class RetrofitDataAgentImpl extends MovieTicketDataAgent {
   }
 
   @override
-  Future<TransactionVO?> checkOut(String token, CheckOutRequest checkOut) {
+  Future<TransactionVO?>? checkOut(String token, CheckOutRequest checkOut) {
     return _mApi
         .checkOut(token, checkOut)
         .then((response) {
           if (response.code == RESPONSE_CODE_SUCCESS) {
             return Future<CheckOutResponse>.value(response);
           } else {
-            return Future<CheckOutResponse>.error(response.message);
+            return Future<CheckOutResponse>.error(response.message!);
           }
         })
         .asStream()

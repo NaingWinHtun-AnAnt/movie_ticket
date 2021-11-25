@@ -6,18 +6,18 @@ part 'movie_detail_response.g.dart';
 @JsonSerializable()
 class MovieDetailResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
-  MovieVO data;
+  MovieVO? data;
 
   MovieDetailResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory MovieDetailResponse.fromJson(Map<String, dynamic> json) =>

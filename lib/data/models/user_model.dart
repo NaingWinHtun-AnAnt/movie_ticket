@@ -5,7 +5,7 @@ abstract class UserModel {
   /// from network
   void getUserProfile(String token);
 
-  Future<List<TransactionVO>> getProfileTransaction(String token);
+  Future<List<TransactionVO>?>? getProfileTransaction(String token);
 
   /// from database
   Stream<UserVO?> getUserProfileFromDatabase(String token);

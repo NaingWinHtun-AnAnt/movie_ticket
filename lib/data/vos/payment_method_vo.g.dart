@@ -18,8 +18,8 @@ class PaymentMethodVOAdapter extends TypeAdapter<PaymentMethodVO> {
     };
     return PaymentMethodVO(
       id: fields[0] as int,
-      name: fields[1] as String,
-      description: fields[2] as String,
+      name: fields[1] as String?,
+      description: fields[2] as String?,
     );
   }
 
@@ -53,8 +53,8 @@ class PaymentMethodVOAdapter extends TypeAdapter<PaymentMethodVO> {
 PaymentMethodVO _$PaymentMethodVOFromJson(Map<String, dynamic> json) {
   return PaymentMethodVO(
     id: json['id'] as int,
-    name: json['name'] as String,
-    description: json['description'] as String,
+    name: json['name'] as String?,
+    description: json['description'] as String?,
   );
 }
 

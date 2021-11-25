@@ -14,15 +14,15 @@ class MovieVO {
 
   @JsonKey(name: "original_title")
   @HiveField(1)
-  String originalTitle;
+  String? originalTitle;
 
   @JsonKey(name: "release_date")
   @HiveField(2)
-  String releaseDate;
+  String? releaseDate;
 
   @JsonKey(name: "genres")
   @HiveField(3)
-  List<String> genres;
+  List<String>? genres;
 
   @JsonKey(name: "overview")
   @HiveField(4)
@@ -38,28 +38,28 @@ class MovieVO {
 
   @JsonKey(name: "poster_path")
   @HiveField(7)
-  String posterPath;
+  String? posterPath;
 
   @JsonKey(name: "casts")
   @HiveField(8)
   List<CastVO>? casts;
 
   @HiveField(9)
-  bool? isNowPlaying;
+  bool isNowPlaying;
 
   @HiveField(10)
-  bool? isComingSoon;
+  bool isComingSoon;
 
   MovieVO({
     required this.id,
-    required this.originalTitle,
-    required this.releaseDate,
-    required this.genres,
-    required this.overview,
-    required this.rating,
-    required this.runtime,
-    required this.posterPath,
-    required this.casts,
+    this.originalTitle,
+    this.releaseDate,
+    this.genres,
+    this.overview,
+    this.rating,
+    this.runtime,
+    this.posterPath,
+    this.casts,
     this.isNowPlaying = false,
     this.isComingSoon = false,
   });

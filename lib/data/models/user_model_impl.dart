@@ -21,11 +21,13 @@ class UserModelImpl extends UserModel {
   /// from network
   @override
   void getUserProfile(String token) {
-    _mDataAgent.getUserProfile(token);
+    _mDataAgent.getUserProfile(token)?.then((value) {
+      if (value != null) _userDao.saveUserVO(value);
+    });
   }
 
   @override
-  Future<List<TransactionVO>> getProfileTransaction(String token) {
+  Future<List<TransactionVO>?>? getProfileTransaction(String token) {
     return _mDataAgent.getProfileTransaction(token);
   }
 

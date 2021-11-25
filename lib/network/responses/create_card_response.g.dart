@@ -8,10 +8,10 @@ part of 'create_card_response.dart';
 
 CreateCardResponse _$CreateCardResponseFromJson(Map<String, dynamic> json) {
   return CreateCardResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
-    data: (json['data'] as List<dynamic>)
-        .map((e) => CardVO.fromJson(e as Map<String, dynamic>))
+    code: json['code'] as int?,
+    message: json['message'] as String?,
+    data: (json['data'] as List<dynamic>?)
+        ?.map((e) => CardVO.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

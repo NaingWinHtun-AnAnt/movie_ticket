@@ -6,18 +6,18 @@ part 'check_out_response.g.dart';
 @JsonSerializable()
 class CheckOutResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
   TransactionVO? data;
 
   CheckOutResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory CheckOutResponse.fromJson(Map<String, dynamic> json) =>

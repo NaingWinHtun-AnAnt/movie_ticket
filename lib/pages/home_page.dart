@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
 
     /// user
     _mUserModel
-        .getUserProfileFromDatabase(_mAuthModel.getTokenFromDatabase()!)
+        .getUserProfileFromDatabase(_mAuthModel.getTokenFromDatabase())
         .listen((value) {
       setState(() {
         _mLoginUser = value;
@@ -99,14 +99,14 @@ class _HomePageState extends State<HomePage> {
                     height: MARGIN_MEDIUM_2,
                   ),
                   GreetingSectionView(
-                    user: _mLoginUser!,
+                    user: _mLoginUser,
                   ),
                   SizedBox(
                     height: MARGIN_MEDIUM_2,
                   ),
                   MovieListSectionView(
                     titleText: NOW_SHOWING_TEXT,
-                    movieList: _nowShowingMovieList!,
+                    movieList: _nowShowingMovieList,
                     onTapMovieView: (movieId) =>
                         _navigateToMovieDetailPage(context, movieId),
                   ),
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   MovieListSectionView(
                     titleText: COMING_SOON_TEXT,
-                    movieList: _comingSoonMovieList!,
+                    movieList: _comingSoonMovieList,
                     onTapMovieView: (movieId) =>
                         _navigateToMovieDetailPage(context, movieId),
                   ),
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                         height: DRAWER_HEADER_SPACING_HEIGHT,
                       ),
                       DrawerHeaderSectionView(
-                        loginUser: _mLoginUser!,
+                        loginUser: _mLoginUser,
                       ),
                       SizedBox(
                         height: MARGIN_XXLARGE,
@@ -160,8 +160,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _logout(BuildContext context) {
-    _mAuthModel.logout(widget.token).then((value) {
-      if (value.code == 200) {
+    _mAuthModel.logout(widget.token)?.then((value) {
+      if (value?.code == 200) {
         _mAuthModel.clearAuthenticationFromDatabase();
         _navigateToLoginPage(context);
       }
@@ -251,7 +251,7 @@ class LogoutSectionView extends StatelessWidget {
 }
 
 class DrawerHeaderSectionView extends StatelessWidget {
-  final UserVO loginUser;
+  final UserVO? loginUser;
 
   const DrawerHeaderSectionView({required this.loginUser});
 
@@ -279,7 +279,7 @@ class DrawerHeaderSectionView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              loginUser.name,
+              loginUser?.name ?? "-",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: TEXT_REGULAR_3X,
@@ -292,7 +292,7 @@ class DrawerHeaderSectionView extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  loginUser.email,
+                  loginUser?.email ?? "-",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: TEXT_SMALL,
@@ -318,7 +318,7 @@ class DrawerHeaderSectionView extends StatelessWidget {
 
 class MovieListSectionView extends StatelessWidget {
   final String titleText;
-  final List<MovieVO> movieList;
+  final List<MovieVO>? movieList;
   final Function(int) onTapMovieView;
 
   MovieListSectionView({
@@ -353,7 +353,7 @@ class MovieListSectionView extends StatelessWidget {
 }
 
 class HorizontalMovieListView extends StatelessWidget {
-  final List<MovieVO> movieList;
+  final List<MovieVO>? movieList;
   final Function(int) onTapMovieView;
 
   HorizontalMovieListView({
@@ -367,13 +367,13 @@ class HorizontalMovieListView extends StatelessWidget {
       height: HOME_SCREEN_MOVIE_LIST_VIEW_HEIGHT,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: movieList.length,
+        itemCount: movieList?.length ?? 0,
         padding: EdgeInsets.only(
           left: MARGIN_MEDIUM_2,
         ),
         itemBuilder: (BuildContext context, int index) {
           return MovieView(
-            movie: movieList[index],
+            movie: movieList?[index],
             onTapMovie: onTapMovieView,
           );
         },
@@ -383,7 +383,7 @@ class HorizontalMovieListView extends StatelessWidget {
 }
 
 class GreetingSectionView extends StatelessWidget {
-  final UserVO user;
+  final UserVO? user;
 
   GreetingSectionView({
     required this.user,
@@ -402,7 +402,7 @@ class GreetingSectionView extends StatelessWidget {
             width: MARGIN_MEDIUM_3,
           ),
           GreetingTextView(
-            userName: user.name,
+            userName: user?.name ?? "-",
           ),
         ],
       ),

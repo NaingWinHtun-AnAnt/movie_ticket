@@ -6,18 +6,18 @@ part 'create_card_response.g.dart';
 @JsonSerializable()
 class CreateCardResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
-  List<CardVO> data;
+  List<CardVO>? data;
 
   CreateCardResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory CreateCardResponse.fromJson(Map<String, dynamic> json) =>

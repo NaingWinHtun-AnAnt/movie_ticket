@@ -19,21 +19,17 @@ class SnackModelImpl extends SnackModel {
 
   @override
   void getSnacks(String token) {
-    _mDataAgent.getSnacks(token).then((value) {
-      List<SnackVO> _snackList = value.map((snack) {
-        snack.count = 0;
-        return snack;
-      }).toList();
+    _mDataAgent.getSnacks(token)?.then((value) {
+      List<SnackVO> _snackList = value?.map((snack) {
+            snack.count = 0;
+            return snack;
+          }).toList() ??
+          [];
       _snackDao.saveAllSnacks(_snackList);
     });
   }
 
   /// from database
-  @override
-  void saveSelectedSnackToDatabase(SnackVO snack) {
-    _snackDao.saveSelectedSnacks(snack);
-  }
-
   @override
   Stream<List<SnackVO>> getAllSnacksFromDatabase(
     String token,
@@ -43,10 +39,5 @@ class SnackModelImpl extends SnackModel {
         .getSnackListEventStream()
         .startWith(_snackDao.getSnackListStream())
         .map((event) => _snackDao.getSnackList());
-  }
-
-  @override
-  Future<List<SnackVO>> getSelectedSnacksFromDatabase() {
-    return Future.value(_snackDao.getSelectedSnacks());
   }
 }

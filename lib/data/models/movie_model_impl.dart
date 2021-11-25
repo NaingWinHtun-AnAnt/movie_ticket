@@ -21,30 +21,32 @@ class MovieModelImpl extends MovieModel {
   /// from network
   @override
   void getNowPlayingMovieList() {
-    _mDataAgent.getMovieList(NOW_SHOWING).then((movies) {
-      final List<MovieVO> _nowPlayingMovies = movies.map((movie) {
-        movie.isNowPlaying = true;
-        return movie;
-      }).toList();
+    _mDataAgent.getMovieList(NOW_SHOWING)?.then((movies) {
+      final List<MovieVO> _nowPlayingMovies = movies?.map((movie) {
+            movie.isNowPlaying = true;
+            return movie;
+          }).toList() ??
+          [];
       _movieDao.saveMovieList(_nowPlayingMovies);
     });
   }
 
   @override
   void getComingSoonMovieList() {
-    _mDataAgent.getMovieList(COMING_SOON).then((movies) {
-      final List<MovieVO> _comingSoonMovies = movies.map((movie) {
-        movie.isComingSoon = true;
-        return movie;
-      }).toList();
+    _mDataAgent.getMovieList(COMING_SOON)?.then((movies) {
+      final List<MovieVO> _comingSoonMovies = movies?.map((movie) {
+            movie.isComingSoon = true;
+            return movie;
+          }).toList() ??
+          [];
       _movieDao.saveMovieList(_comingSoonMovies);
     });
   }
 
   @override
   void getMovieDetailById(int movieId) {
-    _mDataAgent.getMovieDetailById(movieId).then((value) {
-      _movieDao.saveMovieVO(value);
+    _mDataAgent.getMovieDetailById(movieId)?.then((value) {
+      if (value != null) _movieDao.saveMovieVO(value);
     });
   }
 
@@ -68,18 +70,11 @@ class MovieModelImpl extends MovieModel {
   }
 
   @override
-  Future<MovieVO?> getMovieDetailFromDatabase(int movieId) {
+  Stream<MovieVO?> getMovieDetailFromDatabase(int movieId) {
     this.getMovieDetailById(movieId);
     return _movieDao
         .getMovieEventStream()
-        .startWith(_movieDao.getMovieDetailByIdStream(movieId))
-        .combineLatest(_movieDao.getMovieDetailByIdStream(movieId),
-            (event, movie) => movie as MovieVO)
-        .first;
-  }
-
-  @override
-  Future<int> getSelectedMovieIdFromDatabase() {
-    return Future.value(_movieDao.getMovieId());
+        .startWith(_movieDao.getMovieDetailByIdStream())
+        .map((event) => _movieDao.getMovieDetailFirstTime());
   }
 }

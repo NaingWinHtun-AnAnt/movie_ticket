@@ -18,17 +18,17 @@ class TransactionVOAdapter extends TypeAdapter<TransactionVO> {
     };
     return TransactionVO(
       id: fields[0] as int,
-      bookingNo: fields[1] as String,
-      bookingDate: fields[2] as String,
-      row: fields[3] as String,
-      seat: fields[4] as String,
-      totalSeat: fields[5] as int,
-      total: fields[6] as String,
-      movieId: fields[7] as int,
-      cinemaId: fields[8] as int,
-      username: fields[9] as String,
-      timeslot: fields[10] as TimeSlotVO,
-      snacks: (fields[11] as List).cast<SnackVO>(),
+      bookingNo: fields[1] as String?,
+      bookingDate: fields[2] as String?,
+      row: fields[3] as String?,
+      seat: fields[4] as String?,
+      totalSeat: fields[5] as int?,
+      total: fields[6] as String?,
+      movieId: fields[7] as int?,
+      cinemaId: fields[8] as int?,
+      username: fields[9] as String?,
+      timeslot: fields[10] as TimeSlotVO?,
+      snacks: (fields[11] as List?)?.cast<SnackVO>(),
     );
   }
 
@@ -80,18 +80,20 @@ class TransactionVOAdapter extends TypeAdapter<TransactionVO> {
 TransactionVO _$TransactionVOFromJson(Map<String, dynamic> json) {
   return TransactionVO(
     id: json['id'] as int,
-    bookingNo: json['booking_no'] as String,
-    bookingDate: json['booking_date'] as String,
-    row: json['row'] as String,
-    seat: json['seat'] as String,
-    totalSeat: json['total_seat'] as int,
-    total: json['total'] as String,
-    movieId: json['movie_id'] as int,
-    cinemaId: json['cinema_id'] as int,
-    username: json['username'] as String,
-    timeslot: TimeSlotVO.fromJson(json['timeslot'] as Map<String, dynamic>),
-    snacks: (json['snacks'] as List<dynamic>)
-        .map((e) => SnackVO.fromJson(e as Map<String, dynamic>))
+    bookingNo: json['booking_no'] as String?,
+    bookingDate: json['booking_date'] as String?,
+    row: json['row'] as String?,
+    seat: json['seat'] as String?,
+    totalSeat: json['total_seat'] as int?,
+    total: json['total'] as String?,
+    movieId: json['movie_id'] as int?,
+    cinemaId: json['cinema_id'] as int?,
+    username: json['username'] as String?,
+    timeslot: json['timeslot'] == null
+        ? null
+        : TimeSlotVO.fromJson(json['timeslot'] as Map<String, dynamic>),
+    snacks: (json['snacks'] as List<dynamic>?)
+        ?.map((e) => SnackVO.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

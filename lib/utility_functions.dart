@@ -8,8 +8,8 @@ void handleError({required BuildContext context, required dynamic error}) {
   if (error is DioError) {
     try {
       ErrorResponse errorResponse =
-          ErrorResponse(message: error.response!.data);
-      showErrorAlert(context, errorResponse.message);
+          ErrorResponse(message: error.response?.data);
+      showErrorAlert(context, errorResponse.message ?? "-");
     } on Error catch (e) {
       showErrorAlert(context, e.toString());
     }

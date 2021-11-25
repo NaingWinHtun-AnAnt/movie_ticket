@@ -18,8 +18,8 @@ class TimeSlotVOAdapter extends TypeAdapter<TimeSlotVO> {
     };
     return TimeSlotVO(
       cinemaDayTimeslotId: fields[0] as int,
-      starTime: fields[1] as String,
-      isSelected: fields[2] as bool?,
+      starTime: fields[1] as String?,
+      isSelected: fields[2] as bool,
     );
   }
 
@@ -53,7 +53,7 @@ class TimeSlotVOAdapter extends TypeAdapter<TimeSlotVO> {
 TimeSlotVO _$TimeSlotVOFromJson(Map<String, dynamic> json) {
   return TimeSlotVO(
     cinemaDayTimeslotId: json['cinema_day_timeslot_id'] as int,
-    starTime: json['start_time'] as String,
+    starTime: json['start_time'] as String?,
   );
 }
 

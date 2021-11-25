@@ -6,6 +6,7 @@ import 'package:movie_ticket/network/agents/movie_ticket_data_agent.dart';
 import 'package:movie_ticket/network/agents/retrofit_data_agent_impl.dart';
 import 'package:movie_ticket/persistence/daos/cinema_dao.dart';
 import 'package:movie_ticket/persistence/daos/seat_dao.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 class CinemaModelImpl extends CinemaModel {
   MovieTicketDataAgent _mDataAgent = RetrofitDataAgentImpl();
@@ -21,19 +22,19 @@ class CinemaModelImpl extends CinemaModel {
   final _seatDao = SeatDao();
 
   @override
-  Future<List<CinemaVO>> getCinemaList() {
+  Future<List<CinemaVO>?>? getCinemaList() {
     return _mDataAgent.getCinemaList();
   }
 
   @override
-  Future<List<MovieSeatVO>> getSeatPlan(
+  Future<List<MovieSeatVO>?>? getSeatPlan(
     String token,
     int id,
     String bookingDate,
   ) {
-    return _mDataAgent.getSeatPlan(token, id, bookingDate).then((value) {
+    return _mDataAgent.getSeatPlan(token, id, bookingDate)?.then((value) {
       List<MovieSeatVO> _seatList = [];
-      value.forEach((element) {
+      value?.forEach((element) {
         _seatList.addAll(element);
       });
       _seatDao.saveAllMovieSeat(_seatList);
@@ -42,48 +43,33 @@ class CinemaModelImpl extends CinemaModel {
   }
 
   @override
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlots(
+  void getCinemaDayTimeSlots(
     String token,
     String date,
   ) {
-    return _mDataAgent.getCinemaDayTimeSlots(token, date).then((value) {
-      List<CinemaDayTimeSlotVO> cinemaTimeSlot = value.map((cinemaDayTimeSlot) {
-        cinemaDayTimeSlot.bookingDate = date;
-        return cinemaDayTimeSlot;
-      }).toList();
-
-      _cinemaDao.saveAllCinemaDayTimeSlot(cinemaTimeSlot);
-
-      return Future.value(cinemaTimeSlot);
+    _mDataAgent.getCinemaDayTimeSlots(token, date)?.then((value) {
+      List<CinemaDayTimeSlotVO> cinemaTimeSlot =
+          value?.map((cinemaDayTimeSlot) {
+                cinemaDayTimeSlot.bookingDate = date;
+                cinemaDayTimeSlot.dates = [];
+                return cinemaDayTimeSlot;
+              }).toList() ??
+              [];
+      _cinemaDao.saveAllCinemaDayTimeSlot(cinemaTimeSlot, date);
     });
   }
 
   /// from database
   @override
-  void saveSelectedCinemaDayTimeSlotsToDatabase(CinemaDayTimeSlotVO cinema) {
-    _cinemaDao.saveSelectedCinemaDayTimeSlot(cinema);
-  }
-
-  @override
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlotsFromDatabase(
+  Stream<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlotsFromDatabase(
+    String token,
     String date,
   ) {
-    return Future.value(_cinemaDao.getAllCinemaDayTimeSlot(date));
-  }
-
-  @override
-  Future<CinemaDayTimeSlotVO> getSelectedCinemaDayTimeSlotsFromDatabase() {
-    return Future.value(_cinemaDao.getSelectedCinemaDayTimeSlot());
-  }
-
-  @override
-  void saveSelectedSeatToDatabase(MovieSeatVO seat) {
-    _seatDao.saveSelectedSeat(seat);
-  }
-
-  @override
-  Future<List<MovieSeatVO>> getSelectedMovieSeatFromDatabase() {
-    return Future.value(_seatDao.getSelectedSeat());
+    this.getCinemaDayTimeSlots(token, date);
+    return _cinemaDao
+        .getCinemaDayTimeSlotEventStream()
+        .startWith(_cinemaDao.getAllCinemaDayTimeSlotListStream(date))
+        .map((event) => _cinemaDao.getCinemaDayTimeSlotList(date));
   }
 
   @override

@@ -18,17 +18,18 @@ class CinemaDayTimeSlotVOAdapter extends TypeAdapter<CinemaDayTimeSlotVO> {
     };
     return CinemaDayTimeSlotVO(
       cinemaId: fields[0] as int,
-      cinema: fields[1] as String,
-      timeslots: (fields[2] as List).cast<TimeSlotVO>(),
+      cinema: fields[1] as String?,
+      timeslots: (fields[2] as List?)?.cast<TimeSlotVO>(),
       isSelected: fields[3] as bool?,
       bookingDate: fields[4] as String?,
+      dates: (fields[5] as List?)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CinemaDayTimeSlotVO obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.cinemaId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CinemaDayTimeSlotVOAdapter extends TypeAdapter<CinemaDayTimeSlotVO> {
       ..writeByte(3)
       ..write(obj.isSelected)
       ..writeByte(4)
-      ..write(obj.bookingDate);
+      ..write(obj.bookingDate)
+      ..writeByte(5)
+      ..write(obj.dates);
   }
 
   @override
@@ -59,9 +62,9 @@ class CinemaDayTimeSlotVOAdapter extends TypeAdapter<CinemaDayTimeSlotVO> {
 CinemaDayTimeSlotVO _$CinemaDayTimeSlotVOFromJson(Map<String, dynamic> json) {
   return CinemaDayTimeSlotVO(
     cinemaId: json['cinema_id'] as int,
-    cinema: json['cinema'] as String,
-    timeslots: (json['timeslots'] as List<dynamic>)
-        .map((e) => TimeSlotVO.fromJson(e as Map<String, dynamic>))
+    cinema: json['cinema'] as String?,
+    timeslots: (json['timeslots'] as List<dynamic>?)
+        ?.map((e) => TimeSlotVO.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

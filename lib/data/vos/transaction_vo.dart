@@ -16,61 +16,61 @@ class TransactionVO {
 
   @JsonKey(name: "booking_no")
   @HiveField(1)
-  String bookingNo;
+  String? bookingNo;
 
   @JsonKey(name: "booking_date")
   @HiveField(2)
-  String bookingDate;
+  String? bookingDate;
 
   @JsonKey(name: "row")
   @HiveField(3)
-  String row;
+  String? row;
 
   @JsonKey(name: "seat")
   @HiveField(4)
-  String seat;
+  String? seat;
 
   @JsonKey(name: "total_seat")
   @HiveField(5)
-  int totalSeat;
+  int? totalSeat;
 
   @JsonKey(name: "total")
   @HiveField(6)
-  String total;
+  String? total;
 
   @JsonKey(name: "movie_id")
   @HiveField(7)
-  int movieId;
+  int? movieId;
 
   @JsonKey(name: "cinema_id")
   @HiveField(8)
-  int cinemaId;
+  int? cinemaId;
 
   @JsonKey(name: "username")
   @HiveField(9)
-  String username;
+  String? username;
 
   @JsonKey(name: "timeslot")
   @HiveField(10)
-  TimeSlotVO timeslot;
+  TimeSlotVO? timeslot;
 
   @JsonKey(name: "snacks")
   @HiveField(11)
-  List<SnackVO> snacks;
+  List<SnackVO>? snacks;
 
   TransactionVO({
     required this.id,
-    required this.bookingNo,
-    required this.bookingDate,
-    required this.row,
-    required this.seat,
-    required this.totalSeat,
-    required this.total,
-    required this.movieId,
-    required this.cinemaId,
-    required this.username,
-    required this.timeslot,
-    required this.snacks,
+    this.bookingNo,
+    this.bookingDate,
+    this.row,
+    this.seat,
+    this.totalSeat,
+    this.total,
+    this.movieId,
+    this.cinemaId,
+    this.username,
+    this.timeslot,
+    this.snacks,
   });
 
   factory TransactionVO.fromJson(Map<String, dynamic> json) =>

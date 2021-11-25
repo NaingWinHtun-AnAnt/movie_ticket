@@ -4,33 +4,24 @@ import 'package:movie_ticket/data/vos/movie_seat_vo.dart';
 
 abstract class CinemaModel {
   /// from network
-  Future<List<CinemaVO>> getCinemaList();
+  Future<List<CinemaVO>?>? getCinemaList();
 
-  Future<List<MovieSeatVO>> getSeatPlan(
+  Future<List<MovieSeatVO>?>? getSeatPlan(
     String token,
     int id,
     String bookingDate,
   );
 
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlots(
+  void getCinemaDayTimeSlots(
     String token,
     String date,
   );
 
   /// from database
-  void saveSelectedCinemaDayTimeSlotsToDatabase(
-    CinemaDayTimeSlotVO cinema,
-  );
-
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlotsFromDatabase(
+  Stream<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlotsFromDatabase(
+    String token,
     String date,
   );
 
-  Future<CinemaDayTimeSlotVO> getSelectedCinemaDayTimeSlotsFromDatabase();
-
-  void saveSelectedSeatToDatabase(MovieSeatVO seat);
-
   Future<List<MovieSeatVO>> getAllMovieSeatFromDatabase();
-
-  Future<List<MovieSeatVO>> getSelectedMovieSeatFromDatabase();
 }

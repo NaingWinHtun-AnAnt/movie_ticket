@@ -8,9 +8,11 @@ part of 'movie_detail_response.dart';
 
 MovieDetailResponse _$MovieDetailResponseFromJson(Map<String, dynamic> json) {
   return MovieDetailResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
-    data: MovieVO.fromJson(json['data'] as Map<String, dynamic>),
+    code: json['code'] as int?,
+    message: json['message'] as String?,
+    data: json['data'] == null
+        ? null
+        : MovieVO.fromJson(json['data'] as Map<String, dynamic>),
   );
 }
 

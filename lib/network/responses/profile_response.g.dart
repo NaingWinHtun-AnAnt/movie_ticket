@@ -8,9 +8,11 @@ part of 'profile_response.dart';
 
 ProfileResponse _$ProfileResponseFromJson(Map<String, dynamic> json) {
   return ProfileResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
-    data: UserVO.fromJson(json['data'] as Map<String, dynamic>),
+    code: json['code'] as int?,
+    message: json['message'] as String?,
+    data: json['data'] == null
+        ? null
+        : UserVO.fromJson(json['data'] as Map<String, dynamic>),
   );
 }
 

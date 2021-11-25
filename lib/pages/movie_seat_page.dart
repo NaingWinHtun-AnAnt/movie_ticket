@@ -15,9 +15,9 @@ import 'package:movie_ticket/resources/strings.dart';
 import 'package:movie_ticket/widgets/LongButtonView.dart';
 
 class MovieSeatPage extends StatefulWidget {
-  final TimeSlotVO timeSlot;
+  final TimeSlotVO? timeSlot;
   final String selectedDate;
-  final String cinemaName;
+  final String? cinemaName;
   final int movieId;
 
   const MovieSeatPage({
@@ -43,11 +43,11 @@ class _MovieSeatPageState extends State<MovieSeatPage> {
   void initState() {
     _mCinemaModel
         .getSeatPlan(
-      _mAuthModel.getTokenFromDatabase()!,
-      widget.timeSlot.cinemaDayTimeslotId,
+      _mAuthModel.getTokenFromDatabase(),
+      widget.timeSlot?.cinemaDayTimeslotId ?? 0,
       widget.selectedDate,
     )
-        .then((value) {
+        ?.then((value) {
       setState(() {
         _movieSeats = value;
       });
@@ -61,7 +61,7 @@ class _MovieSeatPageState extends State<MovieSeatPage> {
     //   });
     // });
 
-    _mMovieModel.getMovieDetailFromDatabase(widget.movieId).then((value) {
+    _mMovieModel.getMovieDetailFromDatabase(widget.movieId).listen((value) {
       setState(() {
         _movie = value;
       });
@@ -97,16 +97,16 @@ class _MovieSeatPageState extends State<MovieSeatPage> {
                 child: Column(
                   children: [
                     MovieNameTimeAndCinemaSectionView(
-                      movieName: _movie!.originalTitle,
-                      cinemaName: widget.cinemaName,
+                      movieName: _movie?.originalTitle ?? "-",
+                      cinemaName: widget.cinemaName ?? "-",
                       dateTime:
-                          "${widget.selectedDate},${widget.timeSlot.starTime}",
+                          "${widget.selectedDate},${widget.timeSlot?.starTime ?? "-"}",
                     ),
                     SizedBox(
                       height: MARGIN_LARGE,
                     ),
                     MovieSeatSectionView(
-                      movieSeats: _movieSeats!,
+                      movieSeats: _movieSeats,
                       onTapMovieSeat: (movieSeat) => _onTapMovieSeat(movieSeat),
                     ),
                     SizedBox(
@@ -121,9 +121,10 @@ class _MovieSeatPageState extends State<MovieSeatPage> {
                       height: MARGIN_XLARGE,
                     ),
                     TicketAndSeatSectionView(
-                      seatList: _movieSeats!
-                          .where((element) => element.isSelected == true)
-                          .toList(),
+                      seatList: _movieSeats
+                              ?.where((element) => element.isSelected == true)
+                              .toList() ??
+                          [],
                     ),
                     SizedBox(
                       height: MARGIN_XLARGE,
@@ -150,23 +151,20 @@ class _MovieSeatPageState extends State<MovieSeatPage> {
   }
 
   void _onTapMovieSeat(
-    MovieSeatVO selectedSeat,
+    MovieSeatVO? selectedSeat,
   ) {
-    final isSelected = selectedSeat.isSelected;
+    final isSelected = selectedSeat?.isSelected ?? false;
     setState(() {
-      _movieSeats = _movieSeats!.map((seat) {
+      _movieSeats = _movieSeats?.map((seat) {
         if (seat == selectedSeat) {
-          seat.isSelected = !isSelected!;
-          seat.isSelected!
-              ? _totalSeatPrice += seat.price!
-              : _totalSeatPrice -= seat.price!;
+          seat.isSelected = !isSelected;
+          seat.isSelected
+              ? _totalSeatPrice += seat.price ?? 0
+              : _totalSeatPrice -= seat.price ?? 0;
         }
         return seat;
       }).toList();
     });
-
-    /// save selected seat to database
-    _mCinemaModel.saveSelectedSeatToDatabase(selectedSeat);
   }
 
   void _navigateToPaymentPage(BuildContext context) {
@@ -336,8 +334,8 @@ class MovieSeatGlossaryView extends StatelessWidget {
 }
 
 class MovieSeatSectionView extends StatelessWidget {
-  final List<MovieSeatVO> movieSeats;
-  final Function(MovieSeatVO) onTapMovieSeat;
+  final List<MovieSeatVO>? movieSeats;
+  final Function(MovieSeatVO?) onTapMovieSeat;
 
   const MovieSeatSectionView({
     required this.movieSeats,
@@ -347,12 +345,12 @@ class MovieSeatSectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: movieSeats.length,
+      itemCount: movieSeats?.length ?? 0,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return SeatView(
-          movieSeatVO: movieSeats[index],
+          movieSeatVO: movieSeats?[index],
           onTapMovieSeat: (movieSeat) => onTapMovieSeat(movieSeat),
         );
       },
@@ -365,8 +363,8 @@ class MovieSeatSectionView extends StatelessWidget {
 }
 
 class SeatView extends StatelessWidget {
-  final MovieSeatVO movieSeatVO;
-  final Function(MovieSeatVO) onTapMovieSeat;
+  final MovieSeatVO? movieSeatVO;
+  final Function(MovieSeatVO?) onTapMovieSeat;
 
   SeatView({
     required this.movieSeatVO,
@@ -398,18 +396,20 @@ class SeatView extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            movieSeatVO.isMovieSeatTitle() ? movieSeatVO.title! : "",
+            movieSeatVO?.isMovieSeatTitle() ?? false
+                ? movieSeatVO?.title ?? "-"
+                : "",
           ),
         ),
       ),
     );
   }
 
-  Color _movieSeatColor(MovieSeatVO seat) {
-    if (seat.isMovieSeatTaken()) {
+  Color _movieSeatColor(MovieSeatVO? seat) {
+    if (seat != null && seat.isMovieSeatTaken()) {
       return SEAT_TAKEN_COLOR;
-    } else if (seat.isMovieSeatAvailable()) {
-      return seat.isSelected! ? PRIMARY_COLOR : SEAT_COLOR;
+    } else if (seat?.isMovieSeatAvailable() ?? false) {
+      return seat?.isSelected ?? false ? PRIMARY_COLOR : SEAT_COLOR;
     } else {
       return Colors.white;
     }

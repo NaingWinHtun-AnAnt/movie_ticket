@@ -39,6 +39,7 @@ class _AddNewCardViewState extends State<AddNewCardView> {
             labelText: CARD_NUMBER_TEXT,
             hintText: CARD_NUMBER_SAMPLE_TEXT,
             controller: widget.cardNumberController,
+            keyboardType: TextInputType.number,
           ),
           SizedBox(
             height: MARGIN_MEDIUM_3,
@@ -65,11 +66,13 @@ class LabelAndTextFieldView extends StatelessWidget {
   final String labelText;
   final String hintText;
   final TextEditingController controller;
+  final TextInputType? keyboardType;
 
   LabelAndTextFieldView({
     required this.labelText,
     required this.hintText,
     required this.controller,
+    this.keyboardType,
   });
 
   @override
@@ -84,6 +87,7 @@ class LabelAndTextFieldView extends StatelessWidget {
         TextFieldView(
           hintText: hintText,
           controller: controller,
+          keyboardType: keyboardType,
         ),
       ],
     );
@@ -94,8 +98,10 @@ class ExpirationDateAndCVCSectionView extends StatelessWidget {
   final TextEditingController expireDateController;
   final TextEditingController cvcController;
 
-  const ExpirationDateAndCVCSectionView(
-      {required this.expireDateController, required this.cvcController});
+  const ExpirationDateAndCVCSectionView({
+    required this.expireDateController,
+    required this.cvcController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +113,7 @@ class ExpirationDateAndCVCSectionView extends StatelessWidget {
               labelText: EXPIRATION_DATE_TEXT,
               hintText: EXPIRATION_DATE_SAMPLE_TEXT,
               controller: expireDateController,
+              keyboardType: TextInputType.phone,
             ),
           ),
         ),
@@ -119,6 +126,7 @@ class ExpirationDateAndCVCSectionView extends StatelessWidget {
               labelText: CVC_TEXT,
               hintText: CVC_SAMPLE_TEXT,
               controller: cvcController,
+              keyboardType: TextInputType.number,
             ),
           ),
         ),

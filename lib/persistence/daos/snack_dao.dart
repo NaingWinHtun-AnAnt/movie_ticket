@@ -18,18 +18,8 @@ class SnackDao {
     await getSnackBox().putAll(snackMap);
   }
 
-  void saveSelectedSnacks(SnackVO snack) async {
-    snack.count! > 0
-        ? await getSelectedSnackBox().put(snack.id, snack)
-        : getSelectedSnackBox().delete(snack.id);
-  }
-
   List<SnackVO> getAllSnacks() {
     return getSnackBox().values.toList();
-  }
-
-  List<SnackVO> getSelectedSnacks() {
-    return getSelectedSnackBox().values.toList();
   }
 
   /// reactive programming
@@ -52,13 +42,5 @@ class SnackDao {
 
   Box<SnackVO> getSnackBox() {
     return Hive.box(BOX_NAME_SNACK_VO);
-  }
-
-  void clearSelectedSnackBox() {
-    getSelectedSnackBox().clear();
-  }
-
-  Box<SnackVO> getSelectedSnackBox() {
-    return Hive.box(BOX_NAME_SELECTED_SNACK);
   }
 }

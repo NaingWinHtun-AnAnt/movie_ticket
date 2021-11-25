@@ -9,39 +9,22 @@ class SeatDao {
 
   SeatDao._internal();
 
-  void saveSelectedSeat(MovieSeatVO seat) async {
-    seat.isSelected!
-        ? await getSelectedMovieSeatBox().put(seat.seatName, seat)
-        : getSelectedMovieSeatBox().delete(seat.seatName);
-  }
-
+  /// save to database
   void saveAllMovieSeat(List<MovieSeatVO> seatList) async {
     Map<String, MovieSeatVO> _seatMap = Map.fromIterable(
       seatList,
       key: (seat) => "${seat.id}_${seat.title}",
       value: (seat) => seat,
     );
-    await getMovieSeatBox().clear();
     await getMovieSeatBox().putAll(_seatMap);
   }
 
-  List<MovieSeatVO> getSelectedSeat() {
-    return getSelectedMovieSeatBox().values.toList();
-  }
-
+  /// get from database
   List<MovieSeatVO> getAllSeats() {
     return getMovieSeatBox().values.toList();
   }
 
-  void clearSelectedSeatBox() {
-    getSelectedMovieSeatBox().clear();
-  }
-
   Box<MovieSeatVO> getMovieSeatBox() {
     return Hive.box(BOX_NAME_MOVIE_SEAT_VO);
-  }
-
-  Box<MovieSeatVO> getSelectedMovieSeatBox() {
-    return Hive.box(BOX_NAME_SELECTED_MOVIE_SEAT);
   }
 }

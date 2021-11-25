@@ -39,8 +39,8 @@ class _TicketPageState extends State<TicketPage> {
 
       /// movie detail from database
       _mMovieModel
-          .getMovieDetailFromDatabase(_mTransactionVO!.movieId)
-          .then((value) {
+          .getMovieDetailFromDatabase(_mTransactionVO?.movieId ?? 0)
+          .listen((value) {
         setState(() {
           _movie = value;
         });
@@ -75,8 +75,8 @@ class _TicketPageState extends State<TicketPage> {
                       height: MARGIN_MEDIUM_2,
                     ),
                     TicketDetailSectionView(
-                      movie: _movie!,
-                      transaction: _mTransactionVO!,
+                      movie: _movie,
+                      transaction: _mTransactionVO,
                     ),
                   ],
                 ),
@@ -87,8 +87,8 @@ class _TicketPageState extends State<TicketPage> {
 }
 
 class TicketDetailSectionView extends StatelessWidget {
-  final MovieVO movie;
-  final TransactionVO transaction;
+  final MovieVO? movie;
+  final TransactionVO? transaction;
 
   const TicketDetailSectionView({
     required this.movie,
@@ -111,13 +111,13 @@ class TicketDetailSectionView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MoviePosterView(
-            posterPath: movie.posterPath,
+            posterPath: movie?.posterPath,
           ),
           SizedBox(
             height: MARGIN_MEDIUM,
           ),
           MovieNameAndLengthSectionView(
-            movieName: movie.originalTitle,
+            movieName: movie?.originalTitle,
           ),
           SizedBox(
             height: MARGIN_MEDIUM_2,
@@ -178,7 +178,7 @@ class BarCodeView extends StatelessWidget {
 }
 
 class TicketInfoSectionView extends StatelessWidget {
-  final TransactionVO transaction;
+  final TransactionVO? transaction;
 
   const TicketInfoSectionView({required this.transaction});
 
@@ -192,21 +192,21 @@ class TicketInfoSectionView extends StatelessWidget {
         children: [
           TicketInfoView(
             "Booking no",
-            transaction.bookingNo,
+            transaction?.bookingNo ?? "-",
           ),
           SizedBox(
             height: MARGIN_LARGE,
           ),
           TicketInfoView(
             "Show time - Date",
-            transaction.bookingDate,
+            transaction?.bookingDate ?? "-",
           ),
           SizedBox(
             height: MARGIN_LARGE,
           ),
           TicketInfoView(
             "Theater",
-            transaction.cinemaId.toString(),
+            transaction?.cinemaId.toString(),
           ),
           SizedBox(
             height: MARGIN_LARGE,
@@ -220,21 +220,21 @@ class TicketInfoSectionView extends StatelessWidget {
           ),
           TicketInfoView(
             "Row",
-            transaction.row,
+            transaction?.row ?? "-",
           ),
           SizedBox(
             height: MARGIN_LARGE,
           ),
           TicketInfoView(
             "Seats",
-            transaction.seat,
+            transaction?.seat ?? "-",
           ),
           SizedBox(
             height: MARGIN_LARGE,
           ),
           TicketInfoView(
             "Price",
-            "${transaction.total}",
+            "${transaction?.total}",
           ),
         ],
       ),
@@ -244,7 +244,7 @@ class TicketInfoSectionView extends StatelessWidget {
 
 class TicketInfoView extends StatelessWidget {
   final String label;
-  final String text;
+  final String? text;
 
   TicketInfoView(
     this.label,
@@ -264,7 +264,7 @@ class TicketInfoView extends StatelessWidget {
         ),
         Spacer(),
         Text(
-          text,
+          text ?? "-",
           style: TextStyle(
             fontSize: TEXT_REGULAR_2X,
             color: TICKET_INFO_TEXT_COLOR,
@@ -276,7 +276,7 @@ class TicketInfoView extends StatelessWidget {
 }
 
 class MoviePosterView extends StatelessWidget {
-  final String posterPath;
+  final String? posterPath;
 
   const MoviePosterView({required this.posterPath});
 
@@ -292,9 +292,9 @@ class MoviePosterView extends StatelessWidget {
 }
 
 class MovieNameAndLengthSectionView extends StatelessWidget {
-  final String movieName;
+  final String? movieName;
 
-  const MovieNameAndLengthSectionView({required this.movieName});
+  const MovieNameAndLengthSectionView({this.movieName});
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +306,7 @@ class MovieNameAndLengthSectionView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            movieName,
+            movieName ?? "-",
             style: TextStyle(
               fontSize: TEXT_REGULAR_3X,
               color: TICKET_INFO_TEXT_COLOR,

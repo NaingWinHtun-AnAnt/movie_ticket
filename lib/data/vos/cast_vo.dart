@@ -9,11 +9,11 @@ part 'cast_vo.g.dart';
 class CastVO {
   @JsonKey(name: "adult")
   @HiveField(0)
-  bool adult;
+  bool? adult;
 
   @JsonKey(name: "gender")
   @HiveField(1)
-  int gender;
+  int? gender;
 
   @JsonKey(name: "id")
   @HiveField(2)
@@ -21,19 +21,19 @@ class CastVO {
 
   @JsonKey(name: "known_for_department")
   @HiveField(3)
-  String knownForDepartment;
+  String? knownForDepartment;
 
   @JsonKey(name: "name")
   @HiveField(4)
-  String name;
+  String? name;
 
   @JsonKey(name: "original_name")
   @HiveField(5)
-  String originalName;
+  String? originalName;
 
   @JsonKey(name: "popularity")
   @HiveField(6)
-  double popularity;
+  double? popularity;
 
   @JsonKey(name: "profile_path")
   @HiveField(7)
@@ -41,33 +41,33 @@ class CastVO {
 
   @JsonKey(name: "cast_id")
   @HiveField(8)
-  int castId;
+  int? castId;
 
   @JsonKey(name: "character")
   @HiveField(9)
-  String character;
+  String? character;
 
   @JsonKey(name: "credit_id")
   @HiveField(10)
-  String creditId;
+  String? creditId;
 
   @JsonKey(name: "order")
   @HiveField(11)
-  int order;
+  int? order;
 
   CastVO({
-    required this.adult,
-    required this.gender,
+    this.adult,
+    this.gender,
     required this.id,
-    required this.knownForDepartment,
-    required this.name,
-    required this.originalName,
-    required this.popularity,
-    required this.profilePath,
-    required this.castId,
-    required this.character,
-    required this.creditId,
-    required this.order,
+    this.knownForDepartment,
+    this.name,
+    this.originalName,
+    this.popularity,
+    this.profilePath,
+    this.castId,
+    this.character,
+    this.creditId,
+    this.order,
   });
 
   factory CastVO.fromJson(Map<String, dynamic> json) => _$CastVOFromJson(json);

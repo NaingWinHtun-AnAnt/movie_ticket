@@ -6,18 +6,18 @@ part 'payment_method_response.g.dart';
 @JsonSerializable()
 class PaymentMethodResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
-  List<PaymentMethodVO> data;
+  List<PaymentMethodVO>? data;
 
   PaymentMethodResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory PaymentMethodResponse.fromJson(Map<String, dynamic> json) =>

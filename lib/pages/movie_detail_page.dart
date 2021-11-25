@@ -33,7 +33,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     /// from database
-    _mMovieModel.getMovieDetailFromDatabase(widget.movieId).then((value) {
+    _mMovieModel.getMovieDetailFromDatabase(widget.movieId).listen((value) {
       if (value != null)
         setState(() {
           _mMovieDetail = value;
@@ -51,12 +51,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               color: Colors.white,
               child: CustomScrollView(
                 slivers: [
-                  SliverAppBarView(movie: _mMovieDetail!),
+                  SliverAppBarView(movie: _mMovieDetail),
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
                         MovieInfoSectionView(
-                          movieDetail: _mMovieDetail!,
+                          movieDetail: _mMovieDetail,
                         ),
                       ],
                     ),
@@ -76,7 +76,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) => MovieChooseTimePage(
-          movieId: _mMovieDetail!.id,
+          movieId: _mMovieDetail?.id ?? 0,
         ),
         // TicketsAndPaymentPage(),
       ),
@@ -85,7 +85,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 }
 
 class SliverAppBarView extends StatelessWidget {
-  final MovieVO movie;
+  final MovieVO? movie;
 
   const SliverAppBarView({required this.movie});
 
@@ -103,7 +103,7 @@ class SliverAppBarView extends StatelessWidget {
                 background: Stack(
                   children: <Widget>[
                     MovieDetailImageView(
-                      imageUrl: movie.posterPath,
+                      imageUrl: movie?.posterPath,
                     ),
                     MovieDetailBackButtonView(),
                     PlayButtonView(),
@@ -160,7 +160,7 @@ class GetTicketButtonView extends StatelessWidget {
 }
 
 class MovieInfoSectionView extends StatelessWidget {
-  final MovieVO movieDetail;
+  final MovieVO? movieDetail;
 
   MovieInfoSectionView({
     required this.movieDetail,
@@ -184,28 +184,28 @@ class MovieInfoSectionView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          MovieNameView(movieDetail.originalTitle),
+          MovieNameView(movieDetail?.originalTitle ?? "-"),
           SizedBox(
             height: MARGIN_MEDIUM,
           ),
           MovieLengthAndRatingSectionView(
-            rating: movieDetail.rating ?? 0.0,
+            rating: movieDetail?.rating ?? 0.0,
           ),
           SizedBox(
             height: MARGIN_MEDIUM_2,
           ),
-          GenreSectionView(genreList: movieDetail.genres),
+          GenreSectionView(genreList: movieDetail?.genres ?? []),
           SizedBox(
             height: MARGIN_MEDIUM_2,
           ),
           PlotAndSummarySectionView(
-            overView: movieDetail.overview ?? "",
+            overView: movieDetail?.overview ?? "",
           ),
           SizedBox(
             height: MARGIN_MEDIUM_2,
           ),
           CastSectionView(
-            casts: movieDetail.casts ?? [],
+            casts: movieDetail?.casts ?? [],
           )
         ],
       ),
@@ -420,9 +420,9 @@ class MovieDetailBackButtonView extends StatelessWidget {
 }
 
 class MovieDetailImageView extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
 
-  const MovieDetailImageView({required this.imageUrl});
+  const MovieDetailImageView({this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

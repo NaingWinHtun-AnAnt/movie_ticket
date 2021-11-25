@@ -9,10 +9,10 @@ part of 'cinema_vo.dart';
 CinemaVO _$CinemaVOFromJson(Map<String, dynamic> json) {
   return CinemaVO(
     id: json['id'] as int,
-    name: json['name'] as String,
-    phone: json['phone'] as String,
-    email: json['email'] as String,
-    address: json['address'] as String,
+    name: json['name'] as String?,
+    phone: json['phone'] as String?,
+    email: json['email'] as String?,
+    address: json['address'] as String?,
   );
 }
 

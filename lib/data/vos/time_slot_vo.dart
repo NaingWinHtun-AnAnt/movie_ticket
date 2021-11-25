@@ -13,14 +13,14 @@ class TimeSlotVO {
 
   @JsonKey(name: "start_time")
   @HiveField(1)
-  String starTime;
+  String? starTime;
 
   @HiveField(2)
-  bool? isSelected;
+  bool isSelected;
 
   TimeSlotVO({
     required this.cinemaDayTimeslotId,
-    required this.starTime,
+    this.starTime,
     this.isSelected = false,
   });
 

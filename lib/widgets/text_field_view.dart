@@ -5,18 +5,21 @@ class TextFieldView extends StatelessWidget {
   final String hintText;
   final bool italicLabel;
   final TextEditingController controller;
+  final TextInputType? keyboardType;
 
   TextFieldView({
     this.labelText,
     required this.hintText,
     this.italicLabel = false,
     required this.controller,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(

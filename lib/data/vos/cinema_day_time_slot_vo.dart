@@ -16,11 +16,11 @@ class CinemaDayTimeSlotVO {
 
   @JsonKey(name: "cinema")
   @HiveField(1)
-  String cinema;
+  String? cinema;
 
   @JsonKey(name: "timeslots")
   @HiveField(2)
-  List<TimeSlotVO> timeslots;
+  List<TimeSlotVO>? timeslots;
 
   @HiveField(3)
   bool? isSelected;
@@ -28,12 +28,16 @@ class CinemaDayTimeSlotVO {
   @HiveField(4)
   String? bookingDate;
 
+  @HiveField(5)
+  List<String>? dates;
+
   CinemaDayTimeSlotVO({
     required this.cinemaId,
-    required this.cinema,
-    required this.timeslots,
+    this.cinema,
+    this.timeslots,
     this.isSelected,
     this.bookingDate,
+    this.dates,
   });
 
   factory CinemaDayTimeSlotVO.fromJson(Map<String, dynamic> json) =>

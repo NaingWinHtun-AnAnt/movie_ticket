@@ -5,10 +5,10 @@ part 'error_response.g.dart';
 @JsonSerializable()
 class ErrorResponse {
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   ErrorResponse({
-    required this.message,
+    this.message,
   });
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) =>

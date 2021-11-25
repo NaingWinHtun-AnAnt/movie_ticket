@@ -17,18 +17,18 @@ class CastVOAdapter extends TypeAdapter<CastVO> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CastVO(
-      adult: fields[0] as bool,
-      gender: fields[1] as int,
+      adult: fields[0] as bool?,
+      gender: fields[1] as int?,
       id: fields[2] as int,
-      knownForDepartment: fields[3] as String,
-      name: fields[4] as String,
-      originalName: fields[5] as String,
-      popularity: fields[6] as double,
+      knownForDepartment: fields[3] as String?,
+      name: fields[4] as String?,
+      originalName: fields[5] as String?,
+      popularity: fields[6] as double?,
       profilePath: fields[7] as String?,
-      castId: fields[8] as int,
-      character: fields[9] as String,
-      creditId: fields[10] as String,
-      order: fields[11] as int,
+      castId: fields[8] as int?,
+      character: fields[9] as String?,
+      creditId: fields[10] as String?,
+      order: fields[11] as int?,
     );
   }
 
@@ -79,18 +79,18 @@ class CastVOAdapter extends TypeAdapter<CastVO> {
 
 CastVO _$CastVOFromJson(Map<String, dynamic> json) {
   return CastVO(
-    adult: json['adult'] as bool,
-    gender: json['gender'] as int,
+    adult: json['adult'] as bool?,
+    gender: json['gender'] as int?,
     id: json['id'] as int,
-    knownForDepartment: json['known_for_department'] as String,
-    name: json['name'] as String,
-    originalName: json['original_name'] as String,
-    popularity: (json['popularity'] as num).toDouble(),
+    knownForDepartment: json['known_for_department'] as String?,
+    name: json['name'] as String?,
+    originalName: json['original_name'] as String?,
+    popularity: (json['popularity'] as num?)?.toDouble(),
     profilePath: json['profile_path'] as String?,
-    castId: json['cast_id'] as int,
-    character: json['character'] as String,
-    creditId: json['credit_id'] as String,
-    order: json['order'] as int,
+    castId: json['cast_id'] as int?,
+    character: json['character'] as String?,
+    creditId: json['credit_id'] as String?,
+    order: json['order'] as int?,
   );
 }
 

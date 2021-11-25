@@ -8,26 +8,27 @@ class CinemaVO {
   int id;
 
   @JsonKey(name: "name")
-  String name;
+  String? name;
 
   @JsonKey(name: "phone")
-  String phone;
+  String? phone;
 
   @JsonKey(name: "email")
-  String email;
+  String? email;
 
   @JsonKey(name: "address")
-  String address;
+  String? address;
 
   CinemaVO({
     required this.id,
-    required this.name,
-    required this.phone,
-    required this.email,
-    required this.address,
+    this.name,
+    this.phone,
+    this.email,
+    this.address,
   });
 
-  factory CinemaVO.fromJson(Map<String, dynamic> json) => _$CinemaVOFromJson(json);
+  factory CinemaVO.fromJson(Map<String, dynamic> json) =>
+      _$CinemaVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$CinemaVOToJson(this);
 }

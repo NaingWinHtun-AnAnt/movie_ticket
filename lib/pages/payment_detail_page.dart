@@ -2,14 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_ticket/data/models/authentication_model.dart';
 import 'package:movie_ticket/data/models/authentication_model_impl.dart';
-import 'package:movie_ticket/data/models/cinema_model.dart';
-import 'package:movie_ticket/data/models/cinema_model_impl.dart';
-import 'package:movie_ticket/data/models/movie_model.dart';
-import 'package:movie_ticket/data/models/movie_model_impl.dart';
 import 'package:movie_ticket/data/models/payment_model.dart';
 import 'package:movie_ticket/data/models/payment_model_impl.dart';
-import 'package:movie_ticket/data/models/snack_model.dart';
-import 'package:movie_ticket/data/models/snack_model_impl.dart';
 import 'package:movie_ticket/data/models/user_model.dart';
 import 'package:movie_ticket/data/models/user_model_impl.dart';
 import 'package:movie_ticket/data/vos/card_vo.dart';
@@ -40,9 +34,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
   final AuthenticationModel _mAuthModel = AuthenticationModelImpl();
   final UserModel _mUserModel = UserModelImpl();
   final PaymentModel _mPaymentModel = PaymentModelImpl();
-  final CinemaModel _mCinemaModel = CinemaModelImpl();
-  final MovieModel _mMovieModel = MovieModelImpl();
-  final SnackModel _mSnackModel = SnackModelImpl();
   final _cardNumber = TextEditingController();
   final _cardHolder = TextEditingController();
   final _expireDate = TextEditingController();
@@ -52,8 +43,8 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
 
   CheckOutRequest _mCheckOutVO = CheckOutRequest(
     cinemaDayTimeSlotId: 1,
-    seatNumber: "L-13",
-    bookingDate: "2021-6-29",
+    seatNumber: "F-13",
+    bookingDate: "2021-8-4",
     movieId: 337404,
     cardId: 4,
     snacks: [
@@ -66,7 +57,21 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
 
   @override
   void initState() {
-    _initCardList();
+    /// from database
+    _mUserModel
+        .getUserProfileFromDatabase(
+      _mAuthModel.getTokenFromDatabase(),
+    )
+        .listen(
+      (value) {
+        setState(
+          () {
+            _mMyCardList = value?.cards ?? [];
+            _mSelectedCard = _mMyCardList?[0];
+          },
+        );
+      },
+    );
     super.initState();
   }
 
@@ -77,17 +82,6 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     _expireDate.dispose();
     _cvc.dispose();
     super.dispose();
-  }
-
-  void _initCardList() {
-    /// from database
-    /// user
-    _mUserModel.getUserProfileFromDatabase(_mAuthModel.getTokenFromDatabase()!).listen((value) {
-      setState(() {
-        _mMyCardList = value!.cards;
-        _mSelectedCard = _mMyCardList![0];
-      });
-    });
   }
 
   @override
@@ -117,27 +111,24 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       height: MARGIN_MEDIUM_3,
                     ),
                     Visibility(
-                      visible: _mMyCardList!.isNotEmpty,
+                      visible: _mMyCardList?.isNotEmpty ?? false,
                       child: HorizontalCreditCardListSectionView(
-                          cardList: _mMyCardList!,
-                          onTapCard: (card) {
-                            setState(() {
-                              _mSelectedCard = card;
-                            });
-                          }),
+                        cardList: _mMyCardList,
+                        onPageChange: (card) => _onChangeCarouselItem(card),
+                      ),
                     ),
                     SizedBox(
                       height: MARGIN_MEDIUM_3,
                     ),
                     AddNewCardView(
                       cardHolderController: TextEditingController(
-                          text: _mSelectedCard!.cardHolder),
+                          text: _mSelectedCard?.cardHolder ?? ""),
                       expireDateController: TextEditingController(
-                          text: _mSelectedCard!.expirationDate),
+                          text: _mSelectedCard?.expirationDate ?? ""),
                       cardNumberController: TextEditingController(
-                          text: _mSelectedCard!.cardNumber),
+                          text: _mSelectedCard?.cardNumber ?? ""),
                       cvcController:
-                          TextEditingController(text: _mSelectedCard!.cardType),
+                          TextEditingController(text: _mSelectedCard?.cardType),
                     ),
                     SizedBox(
                       height: MARGIN_MEDIUM_3,
@@ -158,39 +149,20 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     );
   }
 
+  void _onChangeCarouselItem(CardVO? card) {
+    setState(() {
+      _mSelectedCard = card;
+    });
+  }
+
   void _checkOut() {
-    _mMovieModel.getSelectedMovieIdFromDatabase().then((value) {
-      _mCheckOutVO.movieId = value;
-    });
-
-    _mCinemaModel.getSelectedCinemaDayTimeSlotsFromDatabase().then((value) {
-      _mCheckOutVO.cinemaDayTimeSlotId = value.timeslots
-          .where((element) => element.isSelected == true)
-          .first
-          .cinemaDayTimeslotId;
-      _mCheckOutVO.cardId = _mSelectedCard!.id;
-      _mCheckOutVO.bookingDate = value.bookingDate;
-    });
-
-    _mCinemaModel.getSelectedMovieSeatFromDatabase().then((value) {
-      value.forEach((element) {
-        _mCheckOutVO.seatNumber = element.seatName;
-      });
-    });
-
-    _mSnackModel.getSelectedSnacksFromDatabase().then((value) {
-      value.forEach((element) {
-        _mCheckOutVO.snacks!
-            .add(SnackRequest(id: element.id, count: element.count));
-      });
-    });
-
     _mPaymentModel
-        .checkOut(_mAuthModel.getTokenFromDatabase()!, _mCheckOutVO)
-        .then((value) {
-      /// clear selection from database
-      _mPaymentModel.clearSelectedInDatabase();
-      _navigateToTicketPage(context, value!.id);
+        .checkOut(
+      _mAuthModel.getTokenFromDatabase(),
+      _mCheckOutVO,
+    )
+        ?.then((value) {
+      _navigateToTicketPage(context, value?.id ?? 0);
     }).catchError((error) {
       handleError(context: context, error: error);
     });
@@ -201,9 +173,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
       MaterialPageRoute(builder: (BuildContext context) {
         return AddNewCardPage();
       }),
-    ).then((value) {
-      _initCardList();
-    });
+    );
   }
 
   void _navigateToTicketPage(BuildContext context, int transactionId) {
@@ -281,12 +251,12 @@ class AddNewCardButtonView extends StatelessWidget {
 }
 
 class HorizontalCreditCardListSectionView extends StatelessWidget {
-  final List<CardVO> cardList;
-  final Function(CardVO) onTapCard;
+  final List<CardVO>? cardList;
+  final Function(CardVO?) onPageChange;
 
   const HorizontalCreditCardListSectionView({
-    required this.cardList,
-    required this.onTapCard,
+    this.cardList,
+    required this.onPageChange,
   });
 
   @override
@@ -294,18 +264,16 @@ class HorizontalCreditCardListSectionView extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height / 8 * 2,
-      child: CarouselSlider(
-        items: cardList
-            .map(
-              (card) => CreditCardView(
-                card: card,
-                onTapCard: (card) => onTapCard(card),
-              ),
-            )
-            .toList(),
+      child: CarouselSlider.builder(
+        itemCount: cardList?.length ?? 0,
+        itemBuilder: (BuildContext context, int index, int realIndex) =>
+            CreditCardView(
+          card: cardList?[index],
+        ),
         options: CarouselOptions(
           aspectRatio: 2.0,
           enlargeCenterPage: true,
+          onPageChanged: (index, reason) => onPageChange(cardList?[index]),
         ),
       ),
     );

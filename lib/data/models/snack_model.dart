@@ -5,9 +5,5 @@ abstract class SnackModel {
   void getSnacks(String token);
 
   /// from database
-  void saveSelectedSnackToDatabase(SnackVO snack);
-
   Stream<List<SnackVO>> getAllSnacksFromDatabase(String token,);
-
-  Future<List<SnackVO>> getSelectedSnacksFromDatabase();
 }

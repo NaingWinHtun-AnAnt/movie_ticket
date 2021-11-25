@@ -22,7 +22,7 @@ class AuthenticationModelImpl extends AuthenticationModel {
 
   /// register, login and logout
   @override
-  Future<AuthenticationResponse> registerWithEmail(
+  Future<AuthenticationResponse?>? registerWithEmail(
     String name,
     String email,
     String phone,
@@ -39,9 +39,9 @@ class AuthenticationModelImpl extends AuthenticationModel {
       googleAccessToken,
       facebookAccessToken,
     )
-        .then((value) {
-      if (value.token != null) {
-        _authDao.saveToken(value.token!);
+        ?.then((value) {
+      if (value?.token != null) {
+        _authDao.saveToken(value!.token!);
         _userDao.saveUserVO(value.data!);
       }
       return Future.value(value);
@@ -49,13 +49,13 @@ class AuthenticationModelImpl extends AuthenticationModel {
   }
 
   @override
-  Future<AuthenticationResponse> loginWithEmail(
+  Future<AuthenticationResponse?>? loginWithEmail(
     String email,
     String password,
   ) {
-    return _mDataAgent.loginWithEmail(email, password).then((value) {
-      if (value.token != null) {
-        _authDao.saveToken(value.token!);
+    return _mDataAgent.loginWithEmail(email, password)?.then((value) {
+      if (value?.token != null) {
+        _authDao.saveToken(value!.token!);
         _userDao.saveUserVO(value.data!);
       }
       return Future.value(value);
@@ -63,10 +63,11 @@ class AuthenticationModelImpl extends AuthenticationModel {
   }
 
   @override
-  Future<AuthenticationResponse> loginWithFacebook(String facebookAccessToken) {
-    return _mDataAgent.loginWithFacebook(facebookAccessToken).then((value) {
-      if (value.token != null) {
-        _authDao.saveToken(value.token!);
+  Future<AuthenticationResponse?>? loginWithFacebook(
+      String facebookAccessToken) {
+    return _mDataAgent.loginWithFacebook(facebookAccessToken)?.then((value) {
+      if (value?.token != null) {
+        _authDao.saveToken(value!.token!);
         _userDao.saveUserVO(value.data!);
       }
       return Future.value(value);
@@ -74,10 +75,10 @@ class AuthenticationModelImpl extends AuthenticationModel {
   }
 
   @override
-  Future<AuthenticationResponse> loginWithGoogle(String accessToken) {
-    return _mDataAgent.loginWithGoogle(accessToken).then((value) {
-      if (value.token != null) {
-        _authDao.saveToken(value.token!);
+  Future<AuthenticationResponse?>? loginWithGoogle(String accessToken) {
+    return _mDataAgent.loginWithGoogle(accessToken)?.then((value) {
+      if (value?.token != null) {
+        _authDao.saveToken(value!.token!);
         _userDao.saveUserVO(value.data!);
       }
       return Future.value(value);
@@ -85,14 +86,14 @@ class AuthenticationModelImpl extends AuthenticationModel {
   }
 
   @override
-  Future<LogOutResponse> logout(String token) {
+  Future<LogOutResponse?>? logout(String token) {
     return _mDataAgent.logout(token);
   }
 
   /// from database
   @override
-  String? getTokenFromDatabase() {
-    return _authDao.getToken();
+  String getTokenFromDatabase() {
+    return _authDao.getToken() ?? "TOKEN IS NULL";
   }
 
   @override

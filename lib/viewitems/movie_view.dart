@@ -4,7 +4,7 @@ import 'package:movie_ticket/network/api_constants.dart';
 import 'package:movie_ticket/resources/dimens.dart';
 
 class MovieView extends StatelessWidget {
-  final MovieVO movie;
+  final MovieVO? movie;
   final Function(int) onTapMovie;
 
   MovieView({
@@ -20,7 +20,7 @@ class MovieView extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => onTapMovie(movie.id),
+            onTap: () => onTapMovie(movie?.id ?? 0),
             child: Container(
               height: MOVIE_VIEW_ITEM_IMAGE_HEIGHT,
               clipBehavior: Clip.antiAlias,
@@ -30,7 +30,7 @@ class MovieView extends StatelessWidget {
                 ),
               ),
               child: Image.network(
-                "$IMAGE_BASE_URL${movie.posterPath}",
+                "$IMAGE_BASE_URL${movie?.posterPath}",
                 fit: BoxFit.cover,
               ),
             ),
@@ -39,7 +39,7 @@ class MovieView extends StatelessWidget {
             height: MARGIN_MEDIUM_2,
           ),
           Text(
-            movie.originalTitle,
+            movie?.originalTitle ?? "-",
             maxLines: 1,
             style: TextStyle(
               fontWeight: FontWeight.w800,
@@ -49,7 +49,7 @@ class MovieView extends StatelessWidget {
             height: MARGIN_SMALL,
           ),
           Text(
-            movie.genres.map((e) => e).join("/"),
+            movie?.genres?.map((e) => e).join("/") ?? "-",
             style: TextStyle(
               fontSize: TEXT_SMALL,
               color: Colors.grey,

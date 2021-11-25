@@ -114,10 +114,10 @@ class _LogInPageState extends State<LogInPage> {
       );
       setState(() {
         _emailController.text = userData['email'];
-        _facebookAccessToken = result.accessToken!.token;
+        _facebookAccessToken = result.accessToken?.token ?? "TOKEN IS NULL";
       });
-      _mAuthModel.loginWithFacebook(_facebookAccessToken).then((value) {
-        if (value.code == 200)
+      _mAuthModel.loginWithFacebook(_facebookAccessToken)?.then((value) {
+        if (value?.code == 200)
           _navigateToHomePage(context, _facebookAccessToken);
       }).catchError((error) {
         handleError(context: context, error: error);
@@ -129,13 +129,13 @@ class _LogInPageState extends State<LogInPage> {
     try {
       await _googleSignIn.signIn().then(
         (googleSignInAccount) {
-          googleSignInAccount!.authentication.then((googleAuth) {
+          googleSignInAccount?.authentication.then((googleAuth) {
             setState(() {
               _emailController.text = googleSignInAccount.email;
-              _googleAccessToken = googleAuth.accessToken!;
+              _googleAccessToken = googleAuth.accessToken ?? "TOKEN IS NULL";
             });
-            _mAuthModel.loginWithGoogle(_googleAccessToken).then((value) {
-              if (value.code == 200)
+            _mAuthModel.loginWithGoogle(_googleAccessToken)?.then((value) {
+              if (value?.code == 200)
                 _navigateToHomePage(context, _googleAccessToken);
             }).catchError((error) {
               handleError(context: context, error: error);
@@ -152,8 +152,8 @@ class _LogInPageState extends State<LogInPage> {
     if (_formState.currentState!.validate()) {
       _mAuthModel
           .loginWithEmail(_emailController.text, _passwordController.text)
-          .then((value) {
-        _navigateToHomePage(context, value.token!);
+          ?.then((value) {
+        _navigateToHomePage(context, value?.token ?? "TOKEN IS NULL");
       }).catchError((error) {
         handleError(context: context, error: error);
       });
@@ -179,7 +179,7 @@ class _LogInPageState extends State<LogInPage> {
       final graphResponse =
           await http.get(Uri.https('graph.facebook.com', "/v2.12/me", {
         "fields": "name,picture,email",
-        "access_token": "${result.accessToken!.token}",
+        "access_token": "${result.accessToken?.token}",
       }));
 
       final profile = JSON.jsonDecode(graphResponse.body);
@@ -198,11 +198,12 @@ class _LogInPageState extends State<LogInPage> {
     try {
       await _googleSignIn.signIn().then(
         (googleSignInAccount) {
-          googleSignInAccount!.authentication.then((value) {
+          googleSignInAccount?.authentication.then((value) {
             setState(() {
-              _userNameController.text = googleSignInAccount.displayName!;
+              _userNameController.text =
+                  googleSignInAccount.displayName ?? "User Name";
               _emailController.text = googleSignInAccount.email;
-              _googleAccessToken = value.accessToken!;
+              _googleAccessToken = value.accessToken ?? "TOKEN IS NULL";
               _facebookAccessToken = "";
             });
           });
@@ -214,8 +215,6 @@ class _LogInPageState extends State<LogInPage> {
   }
 
   void _onTapConfirmToRegister(BuildContext context) {
-    print("Google Access Token = $_googleAccessToken");
-    print("Facebook Access Token = $_facebookAccessToken");
     if (_formState.currentState!.validate()) {
       _mAuthModel
           .registerWithEmail(
@@ -226,8 +225,9 @@ class _LogInPageState extends State<LogInPage> {
         _googleAccessToken,
         _facebookAccessToken,
       )
-          .then((value) {
-        _navigateToHomePage(context, value.token!);
+          ?.then((value) {
+        if (value != null)
+          _navigateToHomePage(context, value.token ?? "TOKEN IS NULL");
       }).catchError((error) {
         handleError(context: context, error: error);
       });

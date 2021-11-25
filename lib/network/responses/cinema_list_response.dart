@@ -6,18 +6,18 @@ part 'cinema_list_response.g.dart';
 @JsonSerializable()
 class CinemaListResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
-  List<CinemaVO> data;
+  List<CinemaVO>? data;
 
   CinemaListResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory CinemaListResponse.fromJson(Map<String, dynamic> json) =>

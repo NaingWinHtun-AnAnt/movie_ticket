@@ -13,7 +13,5 @@ abstract class MovieModel {
 
   Stream<List<MovieVO>?> getComingSoonMovieListFromDatabase();
 
-  Future<MovieVO?> getMovieDetailFromDatabase(int movieId);
-
-  Future<int> getSelectedMovieIdFromDatabase();
+  Stream<MovieVO?> getMovieDetailFromDatabase(int movieId);
 }

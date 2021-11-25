@@ -18,16 +18,16 @@ class MovieVOAdapter extends TypeAdapter<MovieVO> {
     };
     return MovieVO(
       id: fields[0] as int,
-      originalTitle: fields[1] as String,
-      releaseDate: fields[2] as String,
-      genres: (fields[3] as List).cast<String>(),
+      originalTitle: fields[1] as String?,
+      releaseDate: fields[2] as String?,
+      genres: (fields[3] as List?)?.cast<String>(),
       overview: fields[4] as String?,
       rating: fields[5] as double?,
       runtime: fields[6] as int?,
-      posterPath: fields[7] as String,
+      posterPath: fields[7] as String?,
       casts: (fields[8] as List?)?.cast<CastVO>(),
-      isNowPlaying: fields[9] as bool?,
-      isComingSoon: fields[10] as bool?,
+      isNowPlaying: fields[9] as bool,
+      isComingSoon: fields[10] as bool,
     );
   }
 
@@ -77,13 +77,14 @@ class MovieVOAdapter extends TypeAdapter<MovieVO> {
 MovieVO _$MovieVOFromJson(Map<String, dynamic> json) {
   return MovieVO(
     id: json['id'] as int,
-    originalTitle: json['original_title'] as String,
-    releaseDate: json['release_date'] as String,
-    genres: (json['genres'] as List<dynamic>).map((e) => e as String).toList(),
+    originalTitle: json['original_title'] as String?,
+    releaseDate: json['release_date'] as String?,
+    genres:
+        (json['genres'] as List<dynamic>?)?.map((e) => e as String).toList(),
     overview: json['overview'] as String?,
     rating: (json['rating'] as num?)?.toDouble(),
     runtime: json['runtime'] as int?,
-    posterPath: json['poster_path'] as String,
+    posterPath: json['poster_path'] as String?,
     casts: (json['casts'] as List<dynamic>?)
         ?.map((e) => CastVO.fromJson(e as Map<String, dynamic>))
         .toList(),

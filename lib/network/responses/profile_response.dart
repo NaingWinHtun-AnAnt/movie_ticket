@@ -6,18 +6,18 @@ part 'profile_response.g.dart';
 @JsonSerializable()
 class ProfileResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
-  UserVO data;
+  UserVO? data;
 
   ProfileResponse({
-    required this.code,
-    required this.message,
-    required this.data,
+    this.code,
+    this.message,
+    this.data,
   });
 
   factory ProfileResponse.fromJson(Map<String, dynamic> json) =>

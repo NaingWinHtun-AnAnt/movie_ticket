@@ -6,7 +6,7 @@ import 'package:movie_ticket/persistence/hive_constants.dart';
 part 'user_vo.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: HIVE_TYPE_ID_USER_VO,adapterName: "UserVOAdapter")
+@HiveType(typeId: HIVE_TYPE_ID_USER_VO, adapterName: "UserVOAdapter")
 class UserVO {
   @JsonKey(name: "id")
   @HiveField(0)
@@ -14,36 +14,36 @@ class UserVO {
 
   @JsonKey(name: "name")
   @HiveField(1)
-  String name;
+  String? name;
 
   @JsonKey(name: "email")
   @HiveField(2)
-  String email;
+  String? email;
 
   @JsonKey(name: "phone")
   @HiveField(3)
-  String phone;
+  String? phone;
 
   @JsonKey(name: "total_expense")
   @HiveField(4)
-  int totalExpense;
+  int? totalExpense;
 
   @JsonKey(name: "profile_image")
   @HiveField(5)
-  String profileImage;
+  String? profileImage;
 
   @JsonKey(name: "cards")
   @HiveField(6)
-  List<CardVO> cards;
+  List<CardVO>? cards;
 
   UserVO({
     required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.totalExpense,
-    required this.profileImage,
-    required this.cards,
+    this.name,
+    this.email,
+    this.phone,
+    this.totalExpense,
+    this.profileImage,
+    this.cards,
   });
 
   factory UserVO.fromJson(Map<String, dynamic> json) => _$UserVOFromJson(json);

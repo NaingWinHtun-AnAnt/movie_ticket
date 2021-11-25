@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_ticket/data/models/authentication_model.dart';
+import 'package:movie_ticket/data/models/authentication_model_impl.dart';
 import 'package:movie_ticket/data/models/cinema_model.dart';
 import 'package:movie_ticket/data/models/cinema_model_impl.dart';
 import 'package:movie_ticket/data/vos/cinema_day_time_slot_vo.dart';
@@ -23,6 +25,7 @@ class MovieChooseTimePage extends StatefulWidget {
 
 class _MovieChooseTimePageState extends State<MovieChooseTimePage> {
   final CinemaModel _mCinemaModel = CinemaModelImpl();
+  final AuthenticationModel _mAuthModel = AuthenticationModelImpl();
   List<CinemaDayTimeSlotVO>? _mCinemaList;
 
   @override
@@ -75,7 +78,7 @@ class _MovieChooseTimePageState extends State<MovieChooseTimePage> {
                       },
                     ),
                     ChooseItemGridSectionView(
-                      cinemaList: _mCinemaList!,
+                      cinemaList: _mCinemaList,
                       onTapTimeSlot: (cinemaId, timeSlotId, timeSlotValue) =>
                           _onTapTimeSlotView(
                         cinemaId,
@@ -109,55 +112,55 @@ class _MovieChooseTimePageState extends State<MovieChooseTimePage> {
 
   void _getCinemaByDate(String date) {
     /// from database
-    _mCinemaModel.getCinemaDayTimeSlotsFromDatabase(date).then((value) {
-      setState(() {
-        _mCinemaList = value;
-      });
-    });
+    _mCinemaModel
+        .getCinemaDayTimeSlotsFromDatabase(
+            _mAuthModel.getTokenFromDatabase(), date)
+        .listen(
+      (value) {
+        setState(() {
+          _mCinemaList = value;
+        });
+      },
+    );
   }
 
   void _onTapTimeSlotView(int timeSlotId, int cinemaId, bool timeSlotValue) {
     setState(() {
-      _mCinemaList!.map((cinema) {
+      _mCinemaList?.map((cinema) {
         cinema.isSelected = false;
         return cinema;
       }).map((myCinema) {
         if (myCinema.cinemaId == cinemaId) myCinema.isSelected = true;
-        myCinema.timeslots.map((timeSlot) {
+        myCinema.timeslots?.map((timeSlot) {
           timeSlot.isSelected = false;
           return timeSlot;
         }).map((myTimeSlot) {
           if (myTimeSlot.cinemaDayTimeslotId == timeSlotId)
-            myTimeSlot.isSelected = timeSlotValue;
+            myTimeSlot.isSelected = !timeSlotValue;
           return myTimeSlot;
         }).toList();
         return myCinema;
       }).toList();
     });
-
-    /// save selected cinema and time slot to database
-    _mCinemaModel.saveSelectedCinemaDayTimeSlotsToDatabase(
-      _mCinemaList!.where((element) => element.isSelected == true).first,
-    );
   }
 
   void _navigateToMovieSeatPage(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) => MovieSeatPage(
-          timeSlot: _mCinemaList!
-              .where((movie) => movie.isSelected == true)
+          timeSlot: _mCinemaList
+              ?.where((movie) => movie.isSelected == true)
               .first
               .timeslots
-              .where((timeSlot) => timeSlot.isSelected == true)
+              ?.where((timeSlot) => timeSlot.isSelected == true)
               .first,
           selectedDate: dummyDateList
               .where((element) => element.isSelected == true)
               .first
               .formattedDate,
           movieId: widget.movieId,
-          cinemaName: _mCinemaList!
-              .where((element) => element.isSelected == true)
+          cinemaName: _mCinemaList
+              ?.where((element) => element.isSelected == true)
               .first
               .cinema,
         ),
@@ -167,7 +170,7 @@ class _MovieChooseTimePageState extends State<MovieChooseTimePage> {
 }
 
 class ChooseItemGridSectionView extends StatelessWidget {
-  final List<CinemaDayTimeSlotVO> cinemaList;
+  final List<CinemaDayTimeSlotVO>? cinemaList;
   final Function(int, int, bool) onTapTimeSlot;
 
   const ChooseItemGridSectionView(
@@ -184,9 +187,9 @@ class ChooseItemGridSectionView extends StatelessWidget {
       ),
       color: Colors.white,
       child: ListView.builder(
-        itemCount: cinemaList.length,
+        itemCount: cinemaList?.length ?? 0,
         itemBuilder: (BuildContext context, int index) => ChooseItemGridView(
-          cinema: cinemaList[index],
+          cinema: cinemaList?[index],
           onTapTimeSlot: (cinemaId, timeSlotId, timeSlotValue) =>
               onTapTimeSlot(cinemaId, timeSlotId, timeSlotValue),
         ),
@@ -196,7 +199,7 @@ class ChooseItemGridSectionView extends StatelessWidget {
 }
 
 class ChooseItemGridView extends StatelessWidget {
-  final CinemaDayTimeSlotVO cinema;
+  final CinemaDayTimeSlotVO? cinema;
   final Function(int, int, bool) onTapTimeSlot;
 
   const ChooseItemGridView({required this.cinema, required this.onTapTimeSlot});
@@ -207,7 +210,7 @@ class ChooseItemGridView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          cinema.cinema,
+          cinema?.cinema ?? "-",
           style: TextStyle(
             color: Colors.black,
             fontSize: TEXT_REGULAR_3X,
@@ -220,16 +223,16 @@ class ChooseItemGridView extends StatelessWidget {
         GridView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: cinema.timeslots.length,
+          itemCount: cinema?.timeslots?.length ?? 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             childAspectRatio: 2.5,
           ),
           itemBuilder: (BuildContext context, int index) {
             return TimeSlotView(
-              timeSlot: cinema.timeslots[index],
+              timeSlot: cinema?.timeslots?[index],
               onTapTimeSlot: (timeSlotId, value) =>
-                  onTapTimeSlot(timeSlotId, cinema.cinemaId, value),
+                  onTapTimeSlot(timeSlotId, cinema?.cinemaId ?? 0, value),
             );
           },
         ),
@@ -242,7 +245,7 @@ class ChooseItemGridView extends StatelessWidget {
 }
 
 class TimeSlotView extends StatelessWidget {
-  final TimeSlotVO timeSlot;
+  final TimeSlotVO? timeSlot;
   final Function(int, bool) onTapTimeSlot;
 
   const TimeSlotView({required this.timeSlot, required this.onTapTimeSlot});
@@ -250,8 +253,10 @@ class TimeSlotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          onTapTimeSlot(timeSlot.cinemaDayTimeslotId, !timeSlot.isSelected!),
+      onTap: () => onTapTimeSlot(
+        timeSlot?.cinemaDayTimeslotId ?? 0,
+        timeSlot?.isSelected ?? true,
+      ),
       child: Container(
         margin: EdgeInsets.only(
           top: MARGIN_MEDIUM_2,
@@ -259,7 +264,7 @@ class TimeSlotView extends StatelessWidget {
           right: MARGIN_MEDIUM_2,
         ),
         decoration: BoxDecoration(
-          color: timeSlot.isSelected! ? PRIMARY_COLOR : Colors.white,
+          color: timeSlot?.isSelected ?? false ? PRIMARY_COLOR : Colors.white,
           borderRadius: BorderRadius.circular(
             MARGIN_MEDIUM,
           ),
@@ -270,7 +275,7 @@ class TimeSlotView extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            timeSlot.starTime,
+            timeSlot?.starTime ?? "-",
           ),
         ),
       ),

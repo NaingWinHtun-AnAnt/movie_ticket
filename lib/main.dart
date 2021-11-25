@@ -41,9 +41,6 @@ void main() async {
   await Hive.openBox<PaymentMethodVO>(BOX_NAME_PAYMENT_METHOD_VO);
   await Hive.openBox<TransactionVO>(BOX_NAME_TRANSACTION_VO);
   await Hive.openBox<String>(BOX_NAME_TOKEN);
-  await Hive.openBox<int>(BOX_NAME_MOVIE_ID);
-  await Hive.openBox<MovieSeatVO>(BOX_NAME_SELECTED_MOVIE_SEAT);
-  await Hive.openBox<SnackVO>(BOX_NAME_SELECTED_SNACK);
 
   runApp(MyApp());
 }
@@ -60,10 +57,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: _mAuthModel.getTokenFromDatabase() == null
+      home: _mAuthModel.getTokenFromDatabase() == "TOKEN IS NULL"
           ? StartUpPage()
           : HomePage(
-              token: _mAuthModel.getTokenFromDatabase()!,
+              token: _mAuthModel.getTokenFromDatabase(),
             ),
     );
   }

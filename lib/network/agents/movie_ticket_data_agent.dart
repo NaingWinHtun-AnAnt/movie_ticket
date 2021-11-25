@@ -13,7 +13,7 @@ import 'package:movie_ticket/network/responses/log_out_response.dart';
 
 abstract class MovieTicketDataAgent {
   /// register, login and logout
-  Future<AuthenticationResponse> registerWithEmail(
+  Future<AuthenticationResponse?>? registerWithEmail(
     String name,
     String email,
     String phone,
@@ -22,45 +22,45 @@ abstract class MovieTicketDataAgent {
     String facebookAccessToken,
   );
 
-  Future<AuthenticationResponse> loginWithEmail(
+  Future<AuthenticationResponse?>? loginWithEmail(
     String email,
     String password,
   );
 
-  Future<AuthenticationResponse> loginWithFacebook(
+  Future<AuthenticationResponse?>? loginWithFacebook(
     String accessToken,
   );
 
-  Future<AuthenticationResponse> loginWithGoogle(
+  Future<AuthenticationResponse?>? loginWithGoogle(
     String accessToken,
   );
 
-  Future<LogOutResponse> logout(String token);
+  Future<LogOutResponse?>? logout(String token);
 
   /// get cinema list, movie list and detail
-  Future<List<MovieVO>> getMovieList(String status);
+  Future<List<MovieVO>?>? getMovieList(String status);
 
-  Future<List<CinemaVO>> getCinemaList();
+  Future<List<CinemaVO>?>? getCinemaList();
 
-  Future<MovieVO> getMovieDetailById(int movieId);
+  Future<MovieVO?>? getMovieDetailById(int movieId);
 
   /// auth api
-  Future<UserVO> getUserProfile(String token,);
+  Future<UserVO?>? getUserProfile(String token,);
 
-  Future<List<SnackVO>> getSnacks(String token);
+  Future<List<SnackVO>?>? getSnacks(String token);
 
-  Future<List<List<MovieSeatVO>>> getSeatPlan(
+  Future<List<List<MovieSeatVO>>?>? getSeatPlan(
       String token, int id, String bookingDate);
 
-  Future<List<CinemaDayTimeSlotVO>> getCinemaDayTimeSlots(
+  Future<List<CinemaDayTimeSlotVO>?>? getCinemaDayTimeSlots(
       String token, String date);
 
-  Future<CreateCardResponse> createCard(String token, String cardNumber,
+  Future<CreateCardResponse?>? createCard(String token, String cardNumber,
       String cardHolder, String expirationDate, String cvc);
 
-  Future<List<PaymentMethodVO>> getPaymentMethod(String token);
+  Future<List<PaymentMethodVO>?>? getPaymentMethod(String token);
 
-  Future<List<TransactionVO>> getProfileTransaction(String token);
+  Future<List<TransactionVO>?>? getProfileTransaction(String token);
 
-  Future<TransactionVO?> checkOut(String token, CheckOutRequest checkOutVO);
+  Future<TransactionVO?>? checkOut(String token, CheckOutRequest checkOutVO);
 }

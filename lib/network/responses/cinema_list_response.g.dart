@@ -8,10 +8,10 @@ part of 'cinema_list_response.dart';
 
 CinemaListResponse _$CinemaListResponseFromJson(Map<String, dynamic> json) {
   return CinemaListResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
-    data: (json['data'] as List<dynamic>)
-        .map((e) => CinemaVO.fromJson(e as Map<String, dynamic>))
+    code: json['code'] as int?,
+    message: json['message'] as String?,
+    data: (json['data'] as List<dynamic>?)
+        ?.map((e) => CinemaVO.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

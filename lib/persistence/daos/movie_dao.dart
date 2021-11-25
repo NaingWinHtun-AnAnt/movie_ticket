@@ -18,21 +18,16 @@ class MovieDao {
     await getMovieBox().putAll(_movieListMap);
   }
 
-  void saveMovieVO(MovieVO movie) async {
-    await getMovieIdBox().put(MOVIE_ID, movie.id);
-    await getMovieBox().put(movie.id, movie);
+  void saveMovieVO(MovieVO? movie) async {
+    if (movie != null) await getMovieBox().put(MOVIE_ID, movie);
   }
 
   List<MovieVO> getMovieList() {
     return getMovieBox().values.toList();
   }
 
-  MovieVO getMovieDetailById(int movieId) {
-    return getMovieBox().get(movieId)!;
-  }
-
-  int getMovieId() {
-    return getMovieIdBox().get(MOVIE_ID)!;
+  MovieVO? getMovieDetail() {
+    return getMovieBox().get(MOVIE_ID);
   }
 
   /// reactive programming
@@ -52,9 +47,9 @@ class MovieDao {
     );
   }
 
-  Stream<MovieVO> getMovieDetailByIdStream(int movieId) {
+  Stream<MovieVO?> getMovieDetailByIdStream() {
     return Stream.value(
-      getMovieDetailById(movieId),
+      getMovieDetail(),
     );
   }
 
@@ -79,11 +74,15 @@ class MovieDao {
     }
   }
 
-  Box<MovieVO> getMovieBox() {
-    return Hive.box(BOX_NAME_MOVIE_VO);
+  MovieVO? getMovieDetailFirstTime() {
+    if (getMovieDetail() != null) {
+      return getMovieDetail()!;
+    } else {
+      return null;
+    }
   }
 
-  Box<int> getMovieIdBox() {
-    return Hive.box(BOX_NAME_MOVIE_ID);
+  Box<MovieVO> getMovieBox() {
+    return Hive.box(BOX_NAME_MOVIE_VO);
   }
 }

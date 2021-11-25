@@ -5,14 +5,14 @@ part 'log_out_response.g.dart';
 @JsonSerializable()
 class LogOutResponse {
   @JsonKey(name: "code")
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
-  String message;
+  String? message;
 
   LogOutResponse({
-    required this.code,
-    required this.message,
+    this.code,
+    this.message,
   });
 
   factory LogOutResponse.fromJson(Map<String, dynamic> json) =>

@@ -8,8 +8,8 @@ part of 'check_out_response.dart';
 
 CheckOutResponse _$CheckOutResponseFromJson(Map<String, dynamic> json) {
   return CheckOutResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
+    code: json['code'] as int?,
+    message: json['message'] as String?,
     data: json['data'] == null
         ? null
         : TransactionVO.fromJson(json['data'] as Map<String, dynamic>),

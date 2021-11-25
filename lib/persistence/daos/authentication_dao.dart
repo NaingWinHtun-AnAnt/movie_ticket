@@ -9,8 +9,8 @@ class AuthenticationDao {
 
   AuthenticationDao._internal();
 
-  void saveToken(String token) async {
-    await getTokenBox().add("Bearer " + token);
+  void saveToken(String? token) async {
+    if (token != null) await getTokenBox().add("Bearer " + token);
   }
 
   String? getToken() {

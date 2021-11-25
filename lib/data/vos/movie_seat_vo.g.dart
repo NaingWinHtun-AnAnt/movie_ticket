@@ -22,7 +22,7 @@ class MovieSeatVOAdapter extends TypeAdapter<MovieSeatVO> {
       seatName: fields[2] as String?,
       title: fields[3] as String?,
       price: fields[4] as double?,
-      isSelected: fields[5] as bool?,
+      isSelected: fields[5] as bool,
     );
   }
 

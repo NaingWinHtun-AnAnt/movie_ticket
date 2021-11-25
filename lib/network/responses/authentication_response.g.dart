@@ -18,8 +18,8 @@ class AuthenticationResponseAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AuthenticationResponse(
-      code: fields[0] as int,
-      message: fields[1] as String,
+      code: fields[0] as int?,
+      message: fields[1] as String?,
       data: fields[2] as UserVO?,
       token: fields[3] as String?,
     );
@@ -57,8 +57,8 @@ class AuthenticationResponseAdapter
 AuthenticationResponse _$AuthenticationResponseFromJson(
     Map<String, dynamic> json) {
   return AuthenticationResponse(
-    code: json['code'] as int,
-    message: json['message'] as String,
+    code: json['code'] as int?,
+    message: json['message'] as String?,
     data: json['data'] == null
         ? null
         : UserVO.fromJson(json['data'] as Map<String, dynamic>),

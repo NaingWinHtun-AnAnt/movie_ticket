@@ -15,16 +15,16 @@ class PaymentMethodVO {
 
   @JsonKey(name: "name")
   @HiveField(1)
-  String name;
+  String? name;
 
   @JsonKey(name: "description")
   @HiveField(2)
-  String description;
+  String? description;
 
   PaymentMethodVO({
     required this.id,
-    required this.name,
-    required this.description,
+    this.name,
+    this.description,
   });
 
   factory PaymentMethodVO.fromJson(Map<String, dynamic> json) =>

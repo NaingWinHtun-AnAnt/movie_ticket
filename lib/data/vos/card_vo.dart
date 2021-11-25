@@ -13,28 +13,28 @@ class CardVO {
 
   @JsonKey(name: "card_holder")
   @HiveField(1)
-  String cardHolder;
+  String? cardHolder;
 
   @JsonKey(name: "card_number")
   @HiveField(2)
-  String cardNumber;
+  String? cardNumber;
 
   @JsonKey(name: "expiration_date")
   @HiveField(3)
-  String expirationDate;
+  String? expirationDate;
 
   @JsonKey(name: "card_type")
   @HiveField(4)
-  String cardType;
+  String? cardType;
 
-  bool? isSelected;
+  bool isSelected;
 
   CardVO({
     required this.id,
-    required this.cardHolder,
-    required this.cardNumber,
-    required this.expirationDate,
-    required this.cardType,
+    this.cardHolder,
+    this.cardNumber,
+    this.expirationDate,
+    this.cardType,
     this.isSelected = false,
   });
 

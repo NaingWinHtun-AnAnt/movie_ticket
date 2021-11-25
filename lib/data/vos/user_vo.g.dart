@@ -18,12 +18,12 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
     };
     return UserVO(
       id: fields[0] as int,
-      name: fields[1] as String,
-      email: fields[2] as String,
-      phone: fields[3] as String,
-      totalExpense: fields[4] as int,
-      profileImage: fields[5] as String,
-      cards: (fields[6] as List).cast<CardVO>(),
+      name: fields[1] as String?,
+      email: fields[2] as String?,
+      phone: fields[3] as String?,
+      totalExpense: fields[4] as int?,
+      profileImage: fields[5] as String?,
+      cards: (fields[6] as List?)?.cast<CardVO>(),
     );
   }
 
@@ -65,13 +65,13 @@ class UserVOAdapter extends TypeAdapter<UserVO> {
 UserVO _$UserVOFromJson(Map<String, dynamic> json) {
   return UserVO(
     id: json['id'] as int,
-    name: json['name'] as String,
-    email: json['email'] as String,
-    phone: json['phone'] as String,
-    totalExpense: json['total_expense'] as int,
-    profileImage: json['profile_image'] as String,
-    cards: (json['cards'] as List<dynamic>)
-        .map((e) => CardVO.fromJson(e as Map<String, dynamic>))
+    name: json['name'] as String?,
+    email: json['email'] as String?,
+    phone: json['phone'] as String?,
+    totalExpense: json['total_expense'] as int?,
+    profileImage: json['profile_image'] as String?,
+    cards: (json['cards'] as List<dynamic>?)
+        ?.map((e) => CardVO.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
 }

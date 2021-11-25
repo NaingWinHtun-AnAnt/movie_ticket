@@ -12,11 +12,11 @@ part 'authentication_response.g.dart';
 class AuthenticationResponse {
   @JsonKey(name: "code")
   @HiveField(0)
-  int code;
+  int? code;
 
   @JsonKey(name: "message")
   @HiveField(1)
-  String message;
+  String? message;
 
   @JsonKey(name: "data")
   @HiveField(2)
@@ -27,10 +27,10 @@ class AuthenticationResponse {
   String? token;
 
   AuthenticationResponse({
-    required this.code,
-    required this.message,
-    required this.data,
-    required this.token,
+    this.code,
+    this.message,
+    this.data,
+    this.token,
   });
 
   factory AuthenticationResponse.fromJson(Map<String, dynamic> json) =>

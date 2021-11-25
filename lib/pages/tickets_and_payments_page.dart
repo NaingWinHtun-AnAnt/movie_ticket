@@ -40,7 +40,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
   void initState() {
     /// from database
     _mSnackModel
-        .getAllSnacksFromDatabase(_mAuthModel.getTokenFromDatabase()!)
+        .getAllSnacksFromDatabase(_mAuthModel.getTokenFromDatabase())
         .listen((value) {
       setState(() {
         _mSnackList = value;
@@ -48,7 +48,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
     });
 
     _mMovieTicketModel
-        .getAllPaymentMethodsFromDatabase(_mAuthModel.getTokenFromDatabase()!)
+        .getAllPaymentMethodsFromDatabase(_mAuthModel.getTokenFromDatabase())
         .listen((value) {
       setState(() {
         _mPaymentMethodList = value;
@@ -80,7 +80,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
                     ),
                     Container(
                       child: SnackSectionView(
-                        snackList: _mSnackList!,
+                        snackList: _mSnackList,
                         onTapDecreaseControl: (snackId, value) =>
                             _decreaseSnackCount(snackId, value),
                         onTapIncreaseControl: (snackId, value) =>
@@ -102,7 +102,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
                       height: MARGIN_LARGE,
                     ),
                     PaymentSectionView(
-                      paymentList: _mPaymentMethodList!,
+                      paymentList: _mPaymentMethodList,
                     ),
                     SizedBox(
                       height: MARGIN_XXLARGE,
@@ -121,7 +121,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
 
   void _decreaseSnackCount(int snackId, int value) {
     setState(() {
-      _mSnackList!.where((element) => element.id == snackId).first.count =
+      _mSnackList?.where((element) => element.id == snackId).first.count =
           value;
     });
 
@@ -130,7 +130,7 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
 
   void _increaseSnackCount(int snackId, int value) {
     setState(() {
-      _mSnackList!.where((element) => element.id == snackId).first.count =
+      _mSnackList?.where((element) => element.id == snackId).first.count =
           value;
     });
 
@@ -138,20 +138,18 @@ class _TicketsAndPaymentPageState extends State<TicketsAndPaymentPage> {
   }
 
   void _calculateSubTotal(int snackId, int value, bool des) {
-    /// save selected snack with count
-    _mSnackModel.saveSelectedSnackToDatabase(
-        _mSnackList!.where((element) => element.id == snackId).first);
-
     setState(() {
       des
-          ? _subTotal -= _mSnackList!
-              .where((element) => element.id == snackId)
-              .first
-              .price!
-          : _subTotal += _mSnackList!
-              .where((element) => element.id == snackId)
-              .first
-              .price!;
+          ? _subTotal -= _mSnackList
+                  ?.where((element) => element.id == snackId)
+                  .first
+                  .price ??
+              0
+          : _subTotal += _mSnackList
+                  ?.where((element) => element.id == snackId)
+                  .first
+                  .price ??
+              0;
     });
   }
 
@@ -194,7 +192,7 @@ class PaymentButtonView extends StatelessWidget {
 }
 
 class PaymentSectionView extends StatelessWidget {
-  final List<PaymentMethodVO> paymentList;
+  final List<PaymentMethodVO>? paymentList;
 
   const PaymentSectionView({required this.paymentList});
 
@@ -214,7 +212,7 @@ class PaymentSectionView extends StatelessWidget {
             height: MARGIN_MEDIUM_2,
           ),
           Visibility(
-            visible: paymentList.length != 0,
+            visible: paymentList?.length != 0,
             child: PaymentListView(
               paymentMethod: paymentList,
             ),
@@ -226,7 +224,7 @@ class PaymentSectionView extends StatelessWidget {
 }
 
 class PaymentListView extends StatelessWidget {
-  final List<PaymentMethodVO> paymentMethod;
+  final List<PaymentMethodVO>? paymentMethod;
 
   const PaymentListView({
     required this.paymentMethod,
@@ -238,24 +236,24 @@ class PaymentListView extends StatelessWidget {
       children: [
         PaymentView(
           Icons.credit_card,
-          paymentMethod[0].name,
-          paymentMethod[0].description,
+          paymentMethod?[0].name,
+          paymentMethod?[0].description,
         ),
         SizedBox(
           height: MARGIN_MEDIUM_2,
         ),
         PaymentView(
           Icons.credit_card,
-          paymentMethod[0].name,
-          paymentMethod[0].description,
+          paymentMethod?[0].name,
+          paymentMethod?[0].description,
         ),
         SizedBox(
           height: MARGIN_MEDIUM_2,
         ),
         PaymentView(
           Icons.account_balance_wallet,
-          paymentMethod[0].name,
-          paymentMethod[0].description,
+          paymentMethod?[0].name,
+          paymentMethod?[0].description,
         ),
       ],
     );
@@ -264,8 +262,8 @@ class PaymentListView extends StatelessWidget {
 
 class PaymentView extends StatelessWidget {
   final IconData icon;
-  final String cardType;
-  final String cardSample;
+  final String? cardType;
+  final String? cardSample;
 
   PaymentView(
     this.icon,
@@ -288,7 +286,7 @@ class PaymentView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              cardType,
+              cardType ?? "-",
               style: TextStyle(
                 color: TITLE_TEXT_COLOR,
                 fontSize: TEXT_REGULAR_2X,
@@ -298,7 +296,7 @@ class PaymentView extends StatelessWidget {
               height: MARGIN_SMALL,
             ),
             Text(
-              cardSample,
+              cardSample ?? "-",
               style: TextStyle(
                 color: TICKET_INFO_LABEL_TEXT_COLOR,
               ),
@@ -373,7 +371,7 @@ class PromoCodeSectionView extends StatelessWidget {
 }
 
 class SnackSectionView extends StatelessWidget {
-  final List<SnackVO> snackList;
+  final List<SnackVO>? snackList;
   final Function(int, int) onTapDecreaseControl;
   final Function(int, int) onTapIncreaseControl;
 
@@ -386,10 +384,10 @@ class SnackSectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
-      itemCount: snackList.length,
+      itemCount: snackList?.length ?? 0,
       padding: EdgeInsets.zero,
       itemBuilder: (BuildContext context, int index) => ComBoSetView(
-        snack: snackList[index],
+        snack: snackList?[index],
         onTapDecreaseControl: (snackId, value) =>
             onTapDecreaseControl(snackId, value),
         onTapIncreaseControl: (snackId, value) =>
@@ -400,7 +398,7 @@ class SnackSectionView extends StatelessWidget {
 }
 
 class ComBoSetView extends StatelessWidget {
-  final SnackVO snack;
+  final SnackVO? snack;
   final Function(int, int) onTapDecreaseControl;
   final Function(int, int) onTapIncreaseControl;
 
@@ -422,8 +420,8 @@ class ComBoSetView extends StatelessWidget {
           Expanded(
             flex: 2,
             child: ComboSetNameAndInfoSectionView(
-              snack.name!,
-              snack.description!,
+              snack?.name ?? "-",
+              snack?.description ?? "-",
             ),
           ),
           Spacer(),
@@ -479,7 +477,7 @@ class ComboSetNameAndInfoSectionView extends StatelessWidget {
 }
 
 class PriceAndControlSectionView extends StatelessWidget {
-  final SnackVO snack;
+  final SnackVO? snack;
   final Function(int, int) onTapDecreaseControl;
   final Function(int, int) onTapIncreaseControl;
 
@@ -494,7 +492,7 @@ class PriceAndControlSectionView extends StatelessWidget {
     return Column(
       children: [
         PriceTextView(
-          price: "${snack.price}",
+          price: "${snack?.price}",
         ),
         SizedBox(
           height: MARGIN_MEDIUM,
@@ -531,7 +529,7 @@ class PriceTextView extends StatelessWidget {
 }
 
 class PriceControlView extends StatelessWidget {
-  final SnackVO snack;
+  final SnackVO? snack;
   final Function(int, int) onTapDecreaseControl;
   final Function(int, int) onTapIncreaseControl;
 
@@ -562,7 +560,7 @@ class PriceControlView extends StatelessWidget {
                 onTapDecreaseControl(snackId, value <= 0 ? 0 : --value),
           ),
           TicketCounterTextView(
-            snackCounter: snack.count!,
+            snackCounter: snack?.count ?? 0,
           ),
           ControlButtonView(
             icon: Icons.add,
@@ -578,7 +576,7 @@ class PriceControlView extends StatelessWidget {
 
 class ControlButtonView extends StatelessWidget {
   final IconData icon;
-  final SnackVO snack;
+  final SnackVO? snack;
   final Function(int, int) onTapControlButton;
 
   ControlButtonView({
@@ -590,7 +588,7 @@ class ControlButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTapControlButton(snack.id, snack.count!),
+      onTap: () => onTapControlButton(snack?.id ?? 0, snack?.count ?? 0),
       child: Container(
         padding: EdgeInsets.all(6),
         child: Icon(

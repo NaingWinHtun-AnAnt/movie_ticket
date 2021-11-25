@@ -18,10 +18,10 @@ class CardVOAdapter extends TypeAdapter<CardVO> {
     };
     return CardVO(
       id: fields[5] as int,
-      cardHolder: fields[1] as String,
-      cardNumber: fields[2] as String,
-      expirationDate: fields[3] as String,
-      cardType: fields[4] as String,
+      cardHolder: fields[1] as String?,
+      cardNumber: fields[2] as String?,
+      expirationDate: fields[3] as String?,
+      cardType: fields[4] as String?,
     );
   }
 
@@ -59,10 +59,10 @@ class CardVOAdapter extends TypeAdapter<CardVO> {
 CardVO _$CardVOFromJson(Map<String, dynamic> json) {
   return CardVO(
     id: json['id'] as int,
-    cardHolder: json['card_holder'] as String,
-    cardNumber: json['card_number'] as String,
-    expirationDate: json['expiration_date'] as String,
-    cardType: json['card_type'] as String,
+    cardHolder: json['card_holder'] as String?,
+    cardNumber: json['card_number'] as String?,
+    expirationDate: json['expiration_date'] as String?,
+    cardType: json['card_type'] as String?,
   );
 }
 

@@ -9,12 +9,12 @@ class UserDao {
 
   UserDao._internal();
 
-  void saveUserVO(UserVO user) async {
-    await getUserBox().add(user);
+  void saveUserVO(UserVO? user) async {
+    if (user != null) await getUserBox().put(HIVE_USER_KEY, user);
   }
 
   UserVO? getUser() {
-    return getUserBox().getAt(0);
+    return getUserBox().get(HIVE_USER_KEY);
   }
 
   /// reactive programming

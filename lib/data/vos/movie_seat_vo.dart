@@ -29,7 +29,7 @@ class MovieSeatVO {
   double? price;
 
   @HiveField(5)
-  bool? isSelected;
+  bool isSelected;
 
   MovieSeatVO({
     this.id,
